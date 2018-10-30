@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<style type="text/css">
+			.ul li{
+				/*margin-top: 10px;*/
+				text-align: center;
+			}
+			#right{
+				text-align:left ;
+			}
+			
+			.mui-bar-nav{
+				background-color: #2094DF;
+				color:white;
+			}
+		
+			.mui-title,.mui-icon-left-nav{
+				color:white;
+			}
+			.master{
+				font-style: inherit;
+				font-size: 15px;
+			}
+			.detail{
+				font-style: inherit;
+				 font-size: 12px;
+			}
+		</style>
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/vue.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			function open_detail(item){
+				mui.toast("打开子页面");
+			}
+			//vue数据绑定
+			var mpact=new Vue({
+				el:'#mpact',
+				data:{
+					items:[],//列表信息流数据
+					name:'panbin'
+				}
+			});
+			
+			//返回的数据转换
+			function convert(items){
+				var newItems = [];
+				items.forEach(function(item){
+					console.log(item.projectid+';');
+					newItems.push({
+						projectid:item.projectid,
+						projectname:item.projectname,
+						custname:item.custname
+					});
+				});
+				return newItems;
+			}
+			//显示合同
+			function show(){
+//				plus.nativeUI.showWaiting("数据加载中……");
+		       	mui.ajax({
+		            url:basicUrl+'mpact/mpactm.php',
+		            data:{},
+		            type:'GET',
+		            success:function(data){
+//						mpact.items=convert(rsp).concat(mpact.items);
+						mpact.items=data;
+						console.log(mpact.items ); 
+//						plus.nativeUI.closeWaiting();
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		            }
+		      	});   
+	       	}
+			
+			
+			//审核合同
+			function sh(projectid){
+		       	mui.ajax({
+		            url:basicUrl+'mpact/mpactm.php',
+		            data:{
+		            	projectid:projectid
+		            },
+		            type:'GET',
+		            success:function(data){
+		            	if(data==0){
+		            		mui.toast(projectid+"合同审核失败！");
+		            	}else{
+		            		mui.toast(projectid+"合同审核成功！");
+		            	}
+						console.log(data);
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		            }
+		      	});   
+	       	}
+			
+			mui.plusReady(function(){
+				show();
+	       });
+	       
+	       
+	</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">合同订单</h1>
+		    
+		</header>
+		
+		<div class="mui-content" id="mpact">
+		    <ul class="mui-table-view">
+	            <li class="mui-table-view-cell" v-for="item in items">
+					<a  href="javascript:;" @tap="open_detail(item)" class="mui-navigate-rigth">
+						<div style="width:75%;float: left">
+							<p  class="mui-ellipsis detail">{{items}}</p>
+							<p  class="mui-ellipsis detail">{{item.projectname}}</p>
+							<p  class="mui-ellipsis detail">{{item.custname}}</p>
+						</div>
+					</a>
+					<button id="'+ obj[i].projectid + '" type="button"  onclick="sh(id)" class="mui-btn mui-btn-blue">审核</button>
+				</li>
+		    </ul>
+		</div>
+		
+	</body>
+
+</html>

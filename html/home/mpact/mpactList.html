@@ -1,0 +1,339 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.picker.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.poppicker.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css"/>
+		<style type="text/css">
+			.mui-bar-nav{
+				height: 80px;
+			}
+			
+			.mui-content{
+				margin-top: 15px;
+			}
+			.ul li{
+				/*margin-top: 10px;*/
+				text-align: center;
+			}
+			#right{
+				text-align:left ;
+			}
+			
+			.mui-bar-nav{
+				background-color: #2094DF;
+				color:white;
+			}
+		
+			.mui-title,.mui-icon-left-nav{
+				color:white;
+			}
+			.master{
+				font-style: inherit;
+				font-size: 15px;
+			}
+			.detail{
+				font-style: inherit;
+				 font-size: 12px;
+			}
+			.mui-btn{
+				font-size: 12px;
+				margin-top:10px; 
+			}
+		</style>
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script src="../../../js/mui.picker.js" ></script>
+		<script src="../../../js/mui.poppicker.js" ></script>
+		
+		<script type="text/javascript">
+			var webview_detail = null; //合同详情页
+			var ss=null;   //搜索框
+			var projectname=''; //工程名称
+		    var custname='';   //客户名称
+		    var execState='';  //工程执行状态
+		    var qx=null;       //用户权限
+		    var shstyle=['sh mui-btn mui-btn-red mui-icon iconfont icon-shenhe2','sh mui-btn mui-btn-red mui-icon iconfont icon-fanshenhe'];
+		    var states=[{value:'1',text:'未执行'},
+		    			{value:'2',text:'暂停'},
+		    			{value:'3',text:'正在执行'},
+		    			{value:'4',text:'正常完毕'},
+		    		  ];
+			mui.init(
+				
+			);
+			
+			qxcx(); //查询权限
+			//显示合同
+			function show(projectname,custname){
+				plus.nativeUI.showWaiting("数据加载中……");
+		       	mui.ajax({
+		            url:basicUrl+'mpactm/index',
+		            data:{
+		            	projectname:projectname,
+		            	custname:custname
+		            },
+		            type:'GET',
+		            success:function(data){
+						var obj=eval('('+data+')');
+						var str='';
+						var sh_btn='';
+						var shzt=['未审核','已审核'];
+//						var sh_style=['mui-btn mui-btn-yellow mui-icon mui-icon-compose'];
+						for(var i=0;i<obj.length;i++){
+//							if(obj[i].shtag=='1'){
+//							  sh_btn='<a id="'+obj[i].projectid +'"  value="1" class="sh mui-btn mui-btn-red mui-icon iconfont icon-fanshenhe"></a>';
+////							  sh_btn='<a id="'+obj[i].projectid +'"  onclick="sh(id,0)"  class="mui-btn mui-btn-red mui-icon iconfont icon-fanshenhe sh"></a>';
+//							}else{
+//								
+//							 sh_btn='<a id="'+obj[i].projectid +'"   value="0" class="sh mui-btn mui-btn-red mui-icon iconfont icon-shenhe2 "></a>';
+////							 sh_btn='<a id="'+obj[i].projectid +'"  onclick="sh(id,1)"  class="mui-btn mui-btn-red mui-icon iconfont icon-shenhe2 sh"></a>';
+//							}
+////							console.log(obj[i].projectid+':'+obj[i].shtag);
+              
+							str+='<li  class="mui-table-view-cell">';
+							
+								str+='<div id="div" class="mui-slider-right mui-disabled">';
+					    			str+='<a id="'+obj[i].projectid +'"   value="'+obj[i].shtag+'" class="'+shstyle[obj[i].shtag]+'"></a>';
+									str+='<a id="'+obj[i].projectid +'"   class="mui-btn mui-btn-yellow mui-icon mui-icon-compose xgzt"></a>';
+					    			//onclick="upState(id)"
+					    		str+='</div>';
+					    		
+					    		str+='<div class="mui-slider-handle">';
+									str+='<div   style="width:75%;float: left">';
+										str+='<a  id="'+ obj[i].projectid + '" class="mui-navigate-rigth" onclick="open_detail(id)">';
+											str+='<p  class="mui-ellipsis detail">工程代码：'+obj[i].projectid+'</p>';
+											str+='<p  class="mui-ellipsis detail">工程名称：'+obj[i].projectname+'</p>';
+											str+= '<p  class="mui-ellipsis detail">客户名称：'+obj[i].custname+'</p>';
+										str+='</a>';
+									str+='</div>';
+									str+='<div  id="aaaaaa" style="width:25%;float:right">';
+										str+= '<a  class="mui-ellipsis detail" ">'+obj[i].execstate+'</a></br>';
+										str+='<a  id="bbbbbbbbb" class="mui-ellipsis detail" ">'+shzt[obj[i].shtag]+'</a></br>';
+									str+='</div>';
+								str+='</div>';
+								
+							str+='</li>';
+						}
+						
+						mpplanList=document.getElementById('task');
+						mpplanList.innerHTML=str;
+						plus.nativeUI.closeWaiting()
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		                console.log(errorThrown);
+		            }
+		      	});   
+	       	}
+			
+			
+	
+			
+			//审核合同实现
+			function sh(projectid,shstate){
+//				console.log(projectid+":"+shstate);
+				var btn=event.target;
+				var btnArray = ['否', '是'];
+				var titleArray = ['反审核', '审核'];
+				var infoArray = ['反审核', '审核'];
+				mui.confirm(infoArray[shstate]+'工程代码为：'+projectid+'的合同，确认吗？','修改审核状态' , btnArray, function(e) {
+					if (e.index == 1) {
+				       	mui.ajax({
+				            url:basicUrl+'mpactm/sh',
+				            data:{
+				            	projectid:projectid,
+				            	shstate:shstate
+				            },
+				            type:'GET',
+				            success:function(data){
+				            	if(data==0){
+				            		mui.toast(projectid+"操作失败！");
+									
+				            	}else{
+				            		mui.toast(projectid+"操作成功！");
+//				            		console.log(1111);
+				            	}
+//								console.log(data);
+				            },
+				            error:function(xhr,type,errorThrown){
+				                mui.toast(type);
+				            }
+				      	});   
+					}
+				})
+				     	
+			}
+//			
+//			//修改合同执行状态选择框(标签传值)
+//			function upState(projectid){
+////				mui.toast(projectid);
+//				var statePicker=new mui.PopPicker();
+//				var elem=this;
+//				var div =elem.parentNode.parentNode.childNodes[1].childNodes[1]; //返回执行状态a标签的父div
+//				var a = div.getElementsByTagName('a')[0];  //返回执行状态的a标签
+//				//mui.toast(a.innerHTML);
+//				statePicker.setData(states);
+//				statePicker.show(function(item){
+//					execState=item[0].text;
+//					upStateAjax(projectid,execState);
+//					a.innerHTML=execState;
+////					mui.toast(execState);
+//				});
+//				
+//			}
+
+//			修改合同状态
+			function upStateAjax(projectid,execState){
+				var btnState=event.target;
+//				console.log(btnState);
+				var btnArray = ['否', '是'];
+				mui.confirm('工程代码为：'+projectid+'的合同状态修改为' + execState+'，确认吗？', '修改工程执行状态', btnArray, function(e) {
+					if (e.index == 1) {
+//						mui.toast('是');
+						mui.ajax({
+				            url:basicUrl+'mpact/mpactmEdit.php',
+				            data:{
+				            	projectid:projectid,
+				            	execState:execState
+				            },
+				            type:'GET',
+				            success:function(data){
+				            	if(data==0){
+				            		mui.toast(projectid+"合同修改失败！");
+				            		//更改按钮的属性值
+									
+				            	}else{
+				            		mui.toast(projectid+"合同修改成功！");
+				            	}
+				            },
+				            error:function(xhr,type,errorThrown){
+				                mui.toast(type);
+				            }
+				      	});   
+					}
+				})
+			}
+			
+			mui.plusReady(function(){
+				
+				
+				show(projectname,custname);
+				//预加载详情页
+				webview_detail=mui.preload({
+					url:'mpact_detail.html',
+					id:'mpact_detail.html'
+				});
+				
+			     //搜索功能实现
+			     ss=document.getElementById("ss");
+				 ss.addEventListener("keydown",function(e){ 
+        			if(13 == e.keyCode){ //点击了“搜索”  
+        				show(ss.value,ss.value); //显示探索结果
+           				document.activeElement.blur();//隐藏软键盘 
+        			} 
+    			},false);
+    			
+	    		//审核合同1
+				mui('#task').on('tap','.sh',function(event){
+					
+		      		/*
+		      		var elem = this;
+		      		var li = elem.parentNode.parentNode;
+		      		console.log(elem.getAttribute('id'));
+		      		console.log(li.textContent);
+		      		li.textContent="点过了";
+		      		*/
+		      		var elem = this; //获取当前点击的按钮
+		      		var tag=elem.getAttribute('value'); // 审核当前值 0 || 1
+		      		var projectid=elem.getAttribute('id'); //工程代码
+					var div =elem.parentNode.parentNode.childNodes[1].childNodes[1]; //返回审核状态a标签的父div
+					var a = div.getElementsByTagName('a')[1];  //审核状态的a标签
+					//mui.toast(a.innerHTML);
+					if(qx[0].PSH=='1'){
+			      		if(tag==0){
+			      				sh(projectid,1);
+			      				elem.setAttribute('class',shstyle[1]);
+			      				elem.setAttribute('value','1');
+			      				a.innerHTML='审核';
+			      				
+			      		}else{
+			      				sh(projectid,0);
+			      				elem.setAttribute('class',shstyle[0]);
+			      				elem.setAttribute('value','0');
+			      				a.innerHTML='未审核';
+			      		}
+			      	}else{
+			      		mui.toast('对不起，您没有合同审核权限！');
+			      	}
+	      		});
+	       		
+	       		//修改合同执行状态选择框
+				mui('#task').on('tap','.xgzt',function(event){
+					
+//		      		mui.toast(1);
+		      	    var elem = this; //获取当前点击的按钮
+		      		var projectid=elem.getAttribute('id'); //工程代码
+					var statePicker=new mui.PopPicker();
+					
+				
+					var div =elem.parentNode.parentNode.childNodes[1].childNodes[1]; //返回执行状态a标签的父div
+					var a = div.getElementsByTagName('a')[0];  //返回执行状态的a标签
+					if(qx[0].PEdit=='1'){
+						//mui.toast(a.innerHTML);
+						statePicker.setData(states);
+						statePicker.show(function(item){
+							execState=item[0].text;
+							upStateAjax(projectid,execState);
+							a.innerHTML=execState;
+						});
+					}else{
+			      		mui.toast('对不起，您没有合同审核权限！');
+			      	}
+	      		});
+	       
+			});
+	       
+	       //打开合同订单详情
+	       function open_detail(projectid){
+	       		//触发子窗口变更新闻详情
+//	       		mui.toast(projectid);
+	       		mui.fire(webview_detail,'get_detail',{
+	       			projectid:projectid,
+	       			title:projectid
+	       		});
+	       		setTimeout(function(){
+	       			webview_detail.show("slide-in-right",300);
+	       		},150);
+	       }
+	       
+	       
+	</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">合同订单</h1>
+		   <div class="mui-input-row mui-search">
+					<input type="search" id='ss' class="mui-input-clear" placeholder="请输入工程名称或客户名称查询">
+			</div>
+		</header>
+		
+		<div class="mui-content">
+		   	<span class="mui-icon "></span>
+		    <ul id='task' class="mui-table-view">
+		            <li class="mui-table-view-cell">
+		               <button type="button" class="mui-btn mui-btn-red mui-btn-block">按钮</button>
+		            </li>
+		    </ul>
+		</div>
+		
+	</body>
+
+</html>

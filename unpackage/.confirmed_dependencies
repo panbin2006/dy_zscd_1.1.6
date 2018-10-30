@@ -1,0 +1,44 @@
+{
+	"main.html": {
+		"resources": [
+			"html/home.html"
+		],
+		"refer": [
+			"html/work.html",
+			"html/test.html",
+			"html/home.html",
+			"html/phone.html"
+		]
+	},
+	"index.html": {
+		"refer": [
+			"main.html"
+		]
+	},
+	"html/home/mpact/mpactList.html": {
+		"refer": [
+			"html/home/mpact/mpact_detail.html"
+		]
+	},
+	"html/home.html": {
+		"refer": [
+			"html/home/mpact/mpactList.html",
+			"html/home/phb/mphbProdList.html",
+			"html/home/mat/matinList.html",
+			"html/home/car/carList.html",
+			"html/home/mpplancust/mpplancust_list.html",
+			"html/home/msaleodd/msaleoddList.html",
+			"html/home/mpplan/mpplan_main.html"
+		]
+	},
+	"html/home/mpplancust/mpplancust_list.html": {
+		"refer": [
+			"html/home/mpplancust/mpplancust_create.html"
+		]
+	},
+	"html/home/mpplancust/mpplancust_create.html": {
+		"refer": [
+			"html/home/mpplancust/mpplancust_list.html"
+		]
+	}
+}

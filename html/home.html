@@ -1,0 +1,412 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<style type="text/css">
+			/*.mui-grid-9{
+				background-image: url(../img/1.jpg);
+				filter:alpha(Opacity=50); opacity: 0.6;
+			}*/
+			.mui-table-view.mui-grid-9{
+			      /*替换成自己的颜色*/
+			     /*background-color: deepskyblue;*/
+			}
+			*{
+	    		/*background-colr:#00ff00;*/
+	    		font-family: "微软雅黑";
+	    		/*background-image: url(img/1.jpg);*/
+	    	}
+	    	
+	    	span{
+	    		/*color: #63d7fe;*/
+	    		color: #D84B28;
+	    		/*background-color: #2094DF;*/
+	    		/*color: #FFB361;*/
+	    		/*color: #96C95E;*/
+	    	}
+	    	
+	    	span:hover{
+	    		/*color: #D84B28;*/
+				color: orangered;
+	    	}
+	    	#scjb{
+	    		margin-top: 0px;
+	    	}
+	    	
+	    	.mui-navigate-right a(
+	    		font-size: 12px;
+	    	)
+	    	
+		</style>
+		
+	</head>
+
+	<body>
+		
+		<div class="mui-content">
+		
+			<div id="Gallery" class="mui-slider" style="margin-top: 15px;">
+				<div class="mui-slider-group">
+					<div class="mui-slider-item">
+						<!--模块选择九宫格-->
+						<ul class="mui-table-view mui-grid-view mui-grid-9">
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a  id="mpact" href="#">
+									<span class="mui-icon iconfont icon-jihua1"></span>
+									<div class="mui-media-body">工程合同</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a  id="mpplancust" href="#">
+									<span class="mui-icon iconfont icon-beihuodan"></span>
+									<div class="mui-media-body">订货单</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a id='mpplan' href="#">
+									<span  class="mui-icon iconfont icon-jihua"></span>
+									<div class="mui-media-body">生产计划</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a id='msaleodd' href="#">
+									<span class="mui-icon iconfont icon-dingdan"></span>
+									<div class="mui-media-body">发货单</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a  id="matin" href="#">
+									<span class="mui-icon iconfont icon-cailiaoyongliang"></span>
+									<div  class="mui-media-body">原材料管理</div>
+								</a>
+							</li>
+							
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a id='car' href="#">
+									<span class="mui-icon iconfont icon-jiaobanche"></span>
+									<div class="mui-media-body">车辆管理</div>
+								</a>
+							</li>
+						</ul>
+				</div>
+				
+<!--					
+					<!--第二页 -->
+					<div class="mui-slider-item">
+						
+						<ul class="mui-table-view mui-grid-view mui-grid-9">
+								<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a id='phb' href="#">
+									<span class="mui-icon iconfont icon-shiyanxiangmu"></span>
+									<div class="mui-media-body">配比管理</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a id='mproductrecm' href="#">
+									<span  class="mui-icon iconfont icon-beihuodan"></span>
+									<div class="mui-media-body">生产记录</div>
+								</a>
+							</li>
+							
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a id='matout' href="#">
+									<span class="mui-icon iconfont icon-shiyanxiangmu"></span>
+									<div class="mui-media-body">材料消耗查询</div>
+								</a>
+							</li>
+							
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a id='cwkc' href="#">
+									<span class="mui-icon iconfont icon-dingdan"></span>
+									<div class="mui-media-body">材料库存查询</div>
+								</a>
+							</li>
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a  id="matin" href="#">
+									<span class="mui-icon iconfont icon-cailiaoyongliang"></span>
+									<div  class="mui-media-body">原材料管理</div>
+								</a>
+							</li>
+							
+							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+								<a id='car' href="#">
+									<span class="mui-icon iconfont icon-jiaobanche"></span>
+									<div class="mui-media-body">车辆管理</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+					
+					<!--第三页  -->
+					
+			</div>
+			<!--<div class="mui-slider-indicator">
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+			</div>	-->
+				
+			<!--<div><h5 class="mui-title">生产运营情况表</h5></div>--> 
+			
+			<ul id="scjb" class="mui-table-view" style="margin-top: 30px;">
+			      
+			</ul>
+			<div id="main" style="width:100%;height:100px"></div>
+		</div>
+		
+	</div>
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mytools.js"></script>
+		<script src="../js/webviewGroup.js"></script>
+		<script src="../js/common.js" ></script>
+		<script src="../js/echarts.js"></script>
+		<script src="../js/home.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				keyEventBind: {
+					backbutton: false  //关闭back按键监听
+				}
+			});
+			var qx=null; //权限
+			//显示当天运营情况
+			function show(){
+				var pdate=myData(Date());
+				mui.ajax({
+		            url:basicUrl+'index/index',
+		            data:{
+		            	pdate:pdate
+		            },
+		            type:'GET',
+		            success:function(data){
+		            	//生产运营情况表
+						var obj=eval('('+data+')');
+						var str='';
+						//alert(obj[1][0].carNum);
+//						str+='<li class="mui-table-view-cell" style="font-size:16px">生产运营情况</li>';
+						str+='<li class="mui-table-view-cell"><a class="mui-navigate-right"><span  class="mui-icon iconfont icon-jihua1" style="font-size:22px ;color:#2094DF"></span>  计划方量：'+Number(obj[0].jhfl)+'方</a></li>';
+						str+='<li class="mui-table-view-cell"><a class="mui-navigate-right"><span  class="mui-icon iconfont icon-shuinijiaobanche01" style="font-size:22px"></span>  待发方量：'+Number(obj[0].wsfl)+'方</a></li>';
+						str+='<li class="mui-table-view-cell"><a class="mui-navigate-right"><span  class="mui-icon iconfont icon-fahuo2" style="font-size:22px"></span>  完成量(车次)：'+Number(obj[0].ysfl)+'方('+obj[1][0].carNum+'车)</a></li>';
+						str+='<li class="mui-table-view-cell"><a class="mui-navigate-right"><span  class="mui-icon iconfont icon-fahuo2" style="font-size:22px"></span>  出勤车辆：'+obj[2][0].saleCarCount+' 辆</a></li>';
+			           
+			           scjb=document.getElementById('scjb');
+					   scjb.innerHTML=str;
+					   
+					   //生产进度图表
+					   // 基于准备好的dom,初始化echarts实例
+						var myChart = echarts.init(document.getElementById('main'));
+						//指定图表的配置和数据
+						var option={
+							series:[
+								{
+									name:'访问来源',
+									type:'pie',
+									radius:'55%',
+//									roseType: 'angle',
+									label : {
+									normal : {
+										//{b}表示各项名称，此项配置为默认显示项，{c}表示此项的数量显示，默认不显示，({d}%)表示此项占比，默认不显示
+											formatter: '{b}:({d}%)',
+											textStyle : {
+												fontWeight : 'normal',
+												fontSize : 15
+											}
+										}
+									}, 
+									data:[
+										{value:Number(obj[0].ysfl),name:'已送'},
+										{value:Number(obj[0].wsfl),name:'待发'}
+									]
+								}
+							]
+						};
+						
+						myChart.setOption(option);
+					}
+						
+				});
+	
+			}
+			mui.plusReady(function(){
+				qxcx(); //读取权限
+  				show(); //显示运营情况表
+  				
+  				//九宫格滑动效果
+				//获得slider插件对象
+				var gallery = mui('.mui-slider');
+				gallery.slider({
+				  interval:0//自动轮播周期，若为0则不自动播放，默认为0；
+				});
+				//定位到第一个九宫格
+				gallery.slider().gotoItem(0);
+  				//生产计划单
+	      		document.getElementById('mpplan').addEventListener('tap',function(){
+//	      			mui.toast(qx[1].PRead);
+	      			if(qx[1].PRead=='1'){
+//	      				mui.toast(1);
+		      			mui.openWindow({
+		      				url:'home/mpplan/mpplan_main.html',
+		      				id:'mpplan',
+		      				styles:{
+						     
+						    },
+						    extras:{
+						    },
+						    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+						    show:{
+						      autoShow:true,//页面loaded事件发生后自动显示，默认为true
+						      event:'titleUpdate',//页面显示时机，默认为titleUpdate事件时显示
+						      extras:{}//窗口动画是否使用图片加速
+						    },
+						    waiting:{
+						      autoShow:true,//自动显示等待框，默认为true
+						      title:'正在加载...',//等待对话框上显示的提示内容
+						      options:{
+		//					        width:waiting-dialog-widht,//等待框背景区域宽度，默认根据内容自动计算合适宽度
+		//					        height:waiting-dialog-height,//等待框背景区域高度，默认根据内容自动计算合适高度
+		//					        ......
+						      }
+						    }
+		      			});
+	      			}else{
+	      				mui.toast("您没有此操作权限，请联系管理员！");
+	      			}
+	      		});
+	      		
+	      		//材料入库
+	      		document.getElementById('matin').addEventListener('tap',function(){
+	      			if(qx[4].PRead=='1'){
+		      			mui.openWindow({
+		      				url:'home/mat/matinList.html',
+		      				id:'matinlist'
+		      			});
+	      			}else{
+	      				mui.toast("您没有此操作权限，请联系管理员！");
+	      			}
+	      		});
+	      		
+	      		//发货单
+	      		document.getElementById('msaleodd').addEventListener('tap',function(){
+	      			if(qx[2].PRead=='1'){
+		      			mui.openWindow({
+		      				url:"home/msaleodd/msaleoddList.html",
+		      				id:'msaleoddList.html',
+		      				styles:{ 
+							top:'0px',//新页面顶部位置 
+							bottom:'0px',//新页面底部位置 
+		//					width:newpage-width,//新页面宽度，默认为100% 
+		//					height:newpage-height,//新页面高度，默认为100% ...... 
+							}, 
+							extras:{ 
+								name:'aries',
+								age:'18',
+			//					.....//自定义扩展参数，可以用来处理页面间传值 
+							},show:{ //控制打开页面的类型
+								autoShow:true,
+			//					//页面loaded事件发生后自动显示，默认为true 
+								aniShow:'zoom-fade-out',//'zoom-fade-out'页面显示动画，默认为”slide-in-right“；  页面出现的方式 左右上下
+								duration:'350'//页面动画持续时间，Android平台默认100毫秒，iOS平台默认200毫秒； 
+							}, waiting:{ // 控制 弹出转圈框的信息
+	//							autoShow:false,//自动显示等待框，默认为true 
+	//							title:'东友科技...',//等待对话框上显示的提示内容 
+	//							options:{ 
+	//								width:'100px',//等待框背景区域宽度，默认根据内容自动计算合适宽度 
+	//								height:'100px',//等待框背景区域高度，默认根据内容自动计算合适高度 ...... 
+	//							} 
+							}
+		      			});
+		      	    }else{
+	      				mui.toast("您没有此操作权限，请联系管理员！");
+	      			}
+	      		});
+	      		
+	      		//车辆管理
+	      		document.getElementById('car').addEventListener('tap',function(){
+	      			if(qx[5].PRead=='1'){
+		      			mui.openWindow({
+		      				url:"home/car/carList.html",
+		      				id:'carList.html'
+		      			});
+	      			}else{
+	      				mui.toast("您没有此操作权限，请联系管理员！");
+	      			}
+	      		});
+	      		
+	      		//配合比
+	      		document.getElementById('phb').addEventListener('tap',function(){
+	      			if(qx[3].PRead=='1'){
+		      			mui.openWindow({
+		      				url:"home/phb/mphbProdList.html",
+		      				id:'mphbProdList.html'
+		      			});
+		      		}else{
+	      				mui.toast("您没有此操作权限，请联系管理员！");
+	      			}
+	      		});
+	      		
+	      		//合同订单
+	      		document.getElementById('mpact').addEventListener('tap',function(){
+//	      			mui.toast("合同订单");
+					if(qx[0].PRead=='1'){
+		      			mui.openWindow({
+		      				url:"home/mpact/mpactList.html",
+		      				id:'mpactList.html'
+		      			});
+	      			}else{
+	      				mui.toast("您没有此操作权限，请联系管理员！");
+	      			}
+	      		});
+	      		
+	      		//订货单
+	      		document.getElementById('mpplancust').addEventListener('tap',function(){
+	      			if(qx[1].PRead=='1'){
+		      			mui.openWindow({
+		      				url:'home/mpplancust/mpplancust_list.html',
+		      				id:'mpplancust',
+		      				styles:{},
+						    extras:{},
+						    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+						    show:{
+						      autoShow:true,//页面loaded事件发生后自动显示，默认为true
+						      event:'titleUpdate',//页面显示时机，默认为titleUpdate事件时显示
+						      extras:{}//窗口动画是否使用图片加速
+						    },
+						    waiting:{
+						      autoShow:true,//自动显示等待框，默认为true
+						      title:'正在加载...',//等待对话框上显示的提示内容
+						      options:{}
+						    }
+		      			});
+	      			}else{
+	      				mui.toast("您没有此操作权限，请联系管理员！");
+	      			}
+	      		});
+	      		
+	      		//测试
+//	      		document.getElementById('test').addEventListener('tap',function(){
+//	      			mui.openWindow({
+//	      				url:"home/test/test.html",
+//	      				id:'test.html'
+//	      			});
+//	      		});
+	      		
+	      	});
+	      	
+	      	//生产简报显示
+	      	document.getElementById('scjb').addEventListener('tap',function(){
+//	      		mui.toast('aaaaaaaaa');
+	      		show();
+	      	});
+			
+			
+			
+		</script>
+	</body>
+	
+
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-bar-nav{
+				background-color: #2094DF;
+				color:white;
+			}
+		
+			.mui-title,.mui-icon-left-nav{
+				color:white;
+			}
+		</style>
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var qx=null;
+			mui.plusReady(function(){
+				qxcx(); //读取权限
+				mui.ajax({
+		            url:basicUrl+'carinfo/index',
+		            data:{},
+		            type:'GET',
+		            success:function(data){
+						var obj=eval('('+data+')');
+						var str='';
+						var state='';
+						for(var i=0;i<obj.length;i++){
+							str+='<li class="mui-table-view-cell">';
+							str+='<a id="mpplanD" class="mui-navigate-rigth">';
+							
+							str+='<div style="width:70%;float: left">';
+							str+='<p style="font-style: inherit; font-size: 15px;">罐车牌号：<a>'+obj[i].ChePai+'('+obj[i].CarID+')'+'</a></p>';
+							str+='<p style="font-style: inherit; font-size: 15px;">罐车司机：'+obj[i].SJXMW+'</p>';
+//							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">刷卡时间：'+obj[i].CreateTime.substr(0,16)+'</p>';
+							str+='</div>';
+							
+							str+='<div style="width:30%;float: right">';
+							str+='<p style="font-style: inherit; font-size: 15px;">'+state+'</p>';
+							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">'+obj[i].ZhuangTai+'</p>';
+							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">容量10方</p>';
+							str+='</div>';
+							str+='</a>';
+							str+='</li>';
+						}
+						
+						mpplanList=document.getElementById('mpplanList');
+						mpplanList.innerHTML=str;
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		            }
+		      });   
+	       });
+	</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">车辆查询</h1>
+		    
+		</header>
+		
+		<div class="mui-content">
+		   	 <div class="mui-segmented-control">
+		        <a class="mui-control-item mui-active" href="#item1">出厂</a>
+		        <a class="mui-control-item" href="#item2">待命</a>
+		        <a class="mui-control-item" href="#item3">异常</a>
+		  	</div>
+		    <ul id='mpplanList' class="mui-table-view">
+		            <li class="mui-table-view-cell">
+		            </li>
+		    </ul>
+		</div>
+		
+	</body>
+
+</html>

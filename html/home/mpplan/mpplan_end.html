@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<style type="text/css">
+			.ul li{
+				margin-top: 10px;
+			}
+		</style>
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/mytools.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				var pdate=myData(Date());
+				mui.ajax({
+		            
+	            	//0,开工; 1,等待;  2,完工
+//		            	ExecState:'2'
+	            	//PDate:''
+	            	url:basicUrl+'production/mpplanByDataState.php',
+		            data:{
+		            	pdate:pdate,
+		            	state:'2'
+		            },
+		            type:'GET',
+		            success:function(data){
+						var obj=eval('('+data+')');
+						if(obj.length==0){
+		            		mui.toast('没有完工记录');
+		            		return
+		            	}
+						var str='';
+						var state='';
+						for(var i=0;i<obj.length;i++){
+							switch(Number(obj[i].ExecState)){
+								case 0:
+									state='开工';
+									break;
+								case 1:
+									state='等待';
+									break;
+								case 2:
+									state='完工';
+									break;	
+								default:
+									state='null';
+									break;
+							}
+							str+='<li class="mui-table-view-cell">';
+							str+='<a id="mpplanD" class="mui-navigate-rigth">';
+							str+='<div style="width:70%;float: left">';
+							str+='<p style="font-style: inherit; font-size: 15px;">'+obj[i].PlanID+'</p>';
+							str+='<p style="font-style: inherit; font-size: 15px;" class="mui-ellipsis>'+obj[i].ProjectName+'</p>';
+							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">施工部位：'+obj[i].Part+'</p>';
+							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">强度：'+obj[i].Grade+'</p>';
+							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">'+obj[i].TSName+'</p>';
+							
+							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">计划开盘：'+obj[i].PDate.substr(0,16)+'</p>';
+							str+='</div>';
+							str+='<div style="width:30%;float: right">';
+							str+='<p style="font-style: inherit; font-size: 15px;">'+'完工'+'</p>';
+							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">坍落度：'+obj[i].tld+'</p>';
+							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">计划量：'+Number(obj[i].QualityPlan)+'</p>';
+							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">完成量：'+Number(obj[i].QualityGive)+'</p>';
+							
+							str+='</div>';
+							str+='</a>';
+							str+='</li>';
+						}
+						
+						mpplanList=document.getElementById('mpplanList');
+						mpplanList.innerHTML=str;
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		            }
+		      });   
+	       });
+	</script>
+	</head>
+
+	<body>
+		
+		
+		<div class="mui-content">
+		    <ul id='mpplanList' class="mui-table-view">
+		            <li class="mui-table-view-cell">
+		                <!--<a id='mpplanD' class="mui-navigate-rigth">
+		                    <p>A170421003</p>
+			                <p style="font-style: inherit; font-size: 15px;">深圳联通坂田信息大楼</p>
+			                <p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">施工部位：垫层</p>
+			                <p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">计划开盘：2017-04-21 18:00:00</p>
+		                </a>-->
+		            </li>
+		    </ul>
+		</div>
+		
+	</body>
+
+</html>

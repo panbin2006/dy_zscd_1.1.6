@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/common.js"></script>
+		<style type="text/css">
+			.ul li{
+				/*margin-top: 10px;*/
+				text-align: center;
+			}
+			#right{
+				text-align:left ;
+			}
+			
+			.mui-bar-nav{
+				background-color: #2094DF;
+				color:white;
+			}
+		
+			.mui-title,.mui-icon-left-nav{
+				color:white;
+			}
+			.master{
+				font-style: inherit;
+				font-size: 15px;
+			}
+			.detail{
+				font-style: inherit;
+				 font-size: 12px;
+			}
+		</style>
+		<script type="text/javascript">
+			mui.init();
+			var projectid=null;
+			var title=null;
+			//监听事件,获取合同详情
+			document.addEventListener('get_detail',function(event){
+				projectid = event.detail.projectid;
+				title=event.detail.title;
+				mui('.mui-title')[0].innerHTML=title;
+				show();
+			});
+			//显示合同明细
+			function show(){
+				plus.nativeUI.showWaiting("数据加载中……");
+		       	mui.ajax({
+		            url:basicUrl+'mpactd/index',
+		            data:{
+		            	projectid:projectid
+		            },
+		            type:'GET',
+		            success:function(data){
+						var obj=eval('('+data+')');
+						var str='';
+						for(var i=0;i<obj.length;i++){
+							str+='<li class="mui-table-view-cell">';
+							str+='<a   class="mui-navigate-rigth" ">';
+							str+='<div style="width:75%;float: left">';
+							str+='<p  class="mui-ellipsis detail">订单编号：'+obj[i].ItemID+'</p>';
+							str+='<p  class="mui-ellipsis detail">强度等级：'+obj[i].Grade+'</p>';
+							str+= '<p  class="mui-ellipsis detail">特殊要求：'+obj[i].TSName+'</p>';
+							str+='</div>';
+							str+='</a>';
+							str+='</li>';
+						}
+						
+						mpactdList=document.getElementById('mpactdList');
+						mpactdList.innerHTML=str;
+						plus.nativeUI.closeWaiting()
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		            }
+		      	});   
+	       	}
+			
+			mui.plusReady(function(){
+//				show();
+	       });
+			
+		</script>
+	</head>
+	
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">合同明细</h1>
+		</header>
+		<div class="mui-content">
+		    <ul id='mpactdList' class="mui-table-view">
+		            <li class="mui-table-view-cell">
+		               
+		            </li>
+		    </ul>
+		</div>
+	</body>
+	
+</html>

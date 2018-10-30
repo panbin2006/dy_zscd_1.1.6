@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+		<style>
+			.mui-bar-nav{
+				height: 100px;
+			}
+			.mui-content{
+				margin-top: 35px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">计划单列表</h1>
+		</header>
+		<div class="mui-content">
+			<ul id='mpplanList' class="mui-table-view">
+				<li class="mui-table-view-cell">
+					
+				</li>
+			</ul>
+			
+		</div>
+		<nav class="mui-bar mui-bar-tab">
+		    
+		</nav>
+
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/webviewGroup.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function() {
+				mui.ajax(basicUrl + 'public/planState.php', {
+					data: {
+
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+
+					},
+					error: function(xhr, type, errorThrown) {
+
+					}
+				});
+
+				var pdate = myData(Date());
+				mui.ajax({
+					url: basicUrl + 'mpplan/index',
+					data: {
+						pdate: pdate,
+						state: '-1'
+					},
+					type: 'GET',
+					success: function(data) {
+						var obj = eval('(' + data + ')');
+						//console.log(obj[0].ProjectName);
+						var str = '';
+						var state = '';
+						for(var i = 0; i < obj.length; i++) {
+
+							switch(Number(obj[i].ExecState)) {
+								case 0:
+									state = '开工';
+									break;
+								case 1:
+									state = '等待';
+									break;
+								case 2:
+									state = '完工';
+									break;
+								default:
+									state = 'null';
+									break;
+							}
+
+							//计划单一级列表
+							str += '<li class="mui-table-view-cell mui-collapse">';
+							str += '<a id="mpplanD" class="mui-navigate-rigth" href="#">';
+
+							//计划单一级列表左
+							str += '<div style="width:70%;float: left">';
+							str += '<p class="main" >' + obj[i].PlanID + '</p>';
+							str += '<p  class="mui-ellipsis main">' + obj[i].ProjectName + '</p>';
+							//							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">施工部位：'+obj[i].Part+'</p>';
+							//							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">强度：'+obj[i].Grade+obj[i].TSName+'</p>';
+							//							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">计划开盘：'+obj[i].PDate.substr(0,16)+'</p>';
+							str += '</div>';
+
+							//计划单一级列表右
+							str += '<div style="width:30%;float: right">';
+							//							str+='<p style="font-style: inherit; font-size: 15px;">'+state+'</p>';
+							//							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">坍落度：'+obj[i].tld+'</p>';
+							str += '<p  class="mui-ellipsis datil">计划量：' + Number(obj[i].QualityPlan) + '</p>';
+							str += '<p  class="mui-ellipsis datil">完成量：' + Number(obj[i].QualityGive) + '</p>';
+
+							str += '</div>';
+							str += '</a>';
+
+							//计划单二级列表
+							str += '<ul class="mui-table-view mui-table-view-chevron">';
+							str += '<li class="mui-table-view-cell">';
+							str += '<a class="mui-navigate-right" href="#">';
+
+							//计划单二级列表左
+							str += '<div style="width:70%;float: left">';
+							str += '<p  class="mui-ellipsis datil">施工部位：' + obj[i].Part + '</p>';
+							str += '<p  class="mui-ellipsis datil">强度：' + obj[i].Grade + obj[i].TSName + '</p>';
+							str += '<p  class="mui-ellipsis datil">坍落度：' + obj[i].tld + '</p>';
+							str += '<p  class="mui-ellipsis datil">计划开盘：' + obj[i].PDate.substr(0, 16) + '</p>';
+							//							str+='<p style="font-style: inherit; font-size: 15px;">'+state+'</p>';
+							str += '<a id="' + obj[i].PlanID + '" class="datil" onclick="sh(id)">审核</a>';
+							str += '</div>';
+
+							//计划单二级列表右PhbID1
+							str += '<div style="width:30%;float: right">';
+							str += '<p class="datil">1#配方：' + obj[i].PhbID1 + '</p>';
+							str += '<p class="datil">2#配方：' + obj[i].PhbID2 + '</p>';
+							str += '<p class="datil">3#配方：' + obj[i].PhbID3 + '</p>';
+							str += '<p class="datil">4#配方：' + obj[i].PhbID4 + '</p>';
+							str += '</div>';
+							str += '</a>';
+							str += '</li>';
+							str += '</ul>';
+
+							str += '</li>';
+						}
+
+						mpplanList = document.getElementById('mpplanList');
+						mpplanList.innerHTML = str;
+					},
+					error: function(xhr, type, errorThrown) {
+						mui.toast(type);
+					}
+				});
+
+			});
+		</script>
+	</body>
+
+</html>

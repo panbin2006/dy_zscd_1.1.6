@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<style type="text/css">
+			.ul li{
+				/*margin-top: 10px;*/
+				text-align: center;
+			}
+			#right{
+				text-align:left ;
+			}
+			
+			.mui-bar-nav{
+				background-color: #2094DF;
+				color:white;
+			}
+		
+			.mui-title,.mui-icon-left-nav{
+				color:white;
+			}
+		</style>
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/mytools.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				plus.nativeUI.showWaiting("数据加载中……");
+				var date = Date();
+				var dates=myDataS(date);
+				var datee=myDataE(date);
+				mui.ajax({
+		            url:basicUrl+'msaleodd/index',
+		            data:{
+		            	pdateS:dates,
+		            	pdateE:datee
+		            },
+		            type:'GET',
+		            success:function(data){
+						var obj=eval('('+data+')');
+						var str='';
+						for(var i=0;i<obj.length;i++){
+							var PDate=obj[i].PDate;
+							var Quality=Number(obj[i].Quality);
+							//var QualityGive=Number(obj[i].QualityGive);
+							str+='<li class="mui-table-view-cell">';
+							str+='<a id="mpplanD" class="mui-navigate-rigth">';
+							str+='<div style="width:75%;float: left">';
+							str+='<p style="font-style: inherit; font-size: 15px;" class="mui-ellipsis">'+obj[i].ProjectName+'</p>';
+							str+='<p style="font-style: inherit; font-size: 15px;" class="mui-ellipsis">强度：'+obj[i].Grade+'</p>';
+							str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">施工部位：'+obj[i].Part+'</p>';
+							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">发货时间：'+PDate+'</p>';
+							str+='</div>';
+							str+='<div id="right" style="width:25%;float: right">';
+							str+='<p style="font-style: inherit; font-size: 15px;" class="mui-ellipsis">'+obj[i].CarID+'#</p>';
+							str+='<p style="font-style: inherit; font-size: 15px;" class="mui-ellipsis">'+Quality+' m3</p>';
+							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">'+obj[i].CarNum+' 车</p>';
+							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">'+Number(obj[i].QualityGive)+' m3</p>';
+							str+='</div>';
+							str+='</a>';
+							str+='</li>';
+						}
+						
+						mpplanList=document.getElementById('mpplanList');
+						mpplanList.innerHTML=str;
+						plus.nativeUI.closeWaiting();
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		            }
+		      });   
+	       });
+	</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">发货单列表</h1>
+		    
+		</header>
+		
+		<div class="mui-content">
+		   	 
+		    <ul id='mpplanList' class="mui-table-view">
+		            <li class="mui-table-view-cell">
+		               
+		            </li>
+		    </ul>
+		</div>
+		
+	</body>
+
+</html>

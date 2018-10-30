@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../../css/mui.min.css"/>
+    <style type="text/css">
+    	.mui-bar-nav{
+				background-color: #2094DF;
+				color:white;
+			}
+		
+		.mui-title,.mui-icon-left-nav{
+				color:white;
+			}
+    </style>
+    
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title">材料入库汇总</h1>
+	</header>
+	<div class="mui-content">
+	    <div class="mui-slider">
+			<!--选项卡标题区-->
+			<div class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+				  <a class="mui-control-item" href="#item1">按供应商汇总</a>
+				  <a class="mui-control-item" href="#item2">按材料汇总</a>
+			</div>
+			<div class="mui-slider-progress-bar mui-col-xs-6"></div>
+			<div class="mui-slider-group">
+			  <!--第一个选项卡内容区-->
+			  <div id="item1" class="mui-slider-item mui-control-content mui-active">
+			    <!--<ul class="mui-table-view">
+			      <li class="mui-table-view-cell">待办公文1</li>
+			      <li class="mui-table-view-cell">待办公文2</li>
+			      <li class="mui-table-view-cell">待办公文3</li>
+			    </ul>-->
+			  </div>
+			  <!--第二个选项卡内容区，页面加载时为空-->
+			  <div id="item2" class="mui-slider-item mui-control-content">
+			  	<ul class="mui-table-view">
+			      <!--<li class="mui-table-view-cell">待办公文1</li>
+			      <li class="mui-table-view-cell">待办公文2</li>
+			      <li class="mui-table-view-cell">待办公文3</li>-->
+			    </ul>
+			  </div>
+			  <!--第三个选项卡内容区，页面加载时为空-->
+			  <div id="item3" class="mui-slider-item mui-control-content"></div>
+			</div>
+		</div>
+	</div>
+	
+	<script src="../../../js/mui.min.js"></script>
+	<script src="../../../js/common.js"></script>
+	
+		
+	</script>
+	<script type="text/javascript">
+		mui.init();
+		mui.plusReady(function(){
+			var dates=myDataS(Date());
+			var datee=myDataE(Date());
+//			alert(pdates);
+			mui.ajax({
+		            url:basicUrl+'matin/bySupplier',
+		             data:{
+		            	pdateS:dates,
+		            	pdateE:datee
+		            },
+		            type:'GET',
+		            success:function(data){
+						var obj=eval('('+data+')');
+						var str='';
+						str+='<ul class="mui-table-view">';
+						for(var i=0;i<obj.length;i++){
+							var quality = Number(obj[i].Quality)/1000;
+							str+='<li class="mui-table-view-cell">';
+							str+='<a id="matinD" class="mui-navigate-rigth">';
+							str+='<div style="width:60%;float: left">';
+							str+='<p style="font-style: inherit; font-size: 15px;">客户：'+obj[i].SupplierName+'</p>';
+							str+='<p style="font-style: inherit; font-size: 15px;">种类：'+obj[i].MatType+'</p>';
+							str+='<p style="font-style: inherit; font-size: 15px;">名称：'+obj[i].MatName+'</p>';
+							str+='</div>';
+							
+							str+='<div style="width:40%;float: right">';
+							str+='<p style="font-style: inherit; font-size: 16px;" class="mui-ellipsis">净重：'+quality+' 吨'+'</p>';
+							str+='<p style="font-style: inherit; font-size: 16px;" class="mui-ellipsis">车数：'+obj[i].carNum+' 车'+'</p>';
+							str+='</div>';
+							str+='</a>';
+							str+='</li>';
+						}
+						str+='</ul>';
+						item1=document.getElementById('item1');
+						item1.innerHTML=str;
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		            }
+		    });   
+			
+			var item2Show = false,item3Show = false;//子选项卡是否显示标志
+			document.querySelector('.mui-slider').addEventListener('slide', function(event) {
+				//console.log(event.detail.slideNumber);
+				  if (event.detail.slideNumber === 1&&!item2Show) {
+					    //切换到第二个选项卡
+					    //根据具体业务，动态获得第二个选项卡内容；
+					    mui.ajax({
+				            url:basicUrl+'matin/byMatname',
+				             data:{
+				            	pdateS:dates,
+				            	pdateE:datee
+				            },
+				            type:'GET',
+				            success:function(data){
+								var obj=eval('('+data+')');
+								var str='';
+								str+='<ul class="mui-table-view">';
+								for(var i=0;i<obj.length;i++){
+									var quality = Number(obj[i].Quality)/1000;
+									str+='<li class="mui-table-view-cell">';
+									str+='<a id="matinD" class="mui-navigate-rigth">';
+									str+='<div style="width:60%;float: left">';
+									str+='<p style="font-style: inherit; font-size: 15px;">种类：'+obj[i].MatType+'</p>';
+									str+='<p style="font-style: inherit; font-size: 15px;">名称：'+obj[i].MatName+'</p>';
+									str+='</div>';
+									
+									str+='<div style="width:40%;float: right">';
+									str+='<p style="font-style: inherit; font-size: 16px;" class="mui-ellipsis">净重：'+quality+' 吨'+'</p>';
+									str+='<p style="font-style: inherit; font-size: 16px;" class="mui-ellipsis">车数：'+obj[i].carNum+' 车'+'</p>';
+									str+='</div>';
+									str+='</a>';
+									str+='</li>';
+								}
+								str+='</ul>';
+								document.getElementById("item2").innerHTML = str;
+								//改变标志位，下次直接显示
+								item2Show = true;
+				            },
+				            error:function(xhr,type,errorThrown){
+				                mui.toast(type);
+				            }
+				    });   
+					    
+				    
+				    
+				   
+				  } 
+			});
+		});
+		
+		
+	</script>
+</body>
+</html>

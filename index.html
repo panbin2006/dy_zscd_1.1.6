@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="js/mui.min.js"></script>
+    <script src="js/mui.picker.js"></script>
+    <script src="js/mui.poppicker.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/city.data.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init({
+      		keyEventBind:{
+      			backbutton:true
+      		},
+      		preloadPages:[{  //预加载主页面
+			    url:'main.html',
+		      	id:'main.html'           
+			}]
+      		
+      	});
+      	
+
+      	mui.plusReady(function(){
+      		
+		    var bm=document.getElementById('bm');  //部门名称
+	        var username=document.getElementById('username');//用户名称
+	      	var pass=document.getElementById('pass');//密码
+	      	var qx = null;  //用户权限 
+	      	var main = null; //主页面
+	      
+	      		
+	      	//选择部门
+      		bm.addEventListener('tap',function(event){
+				var bmObj=null;
+      			var bmPicker=new  mui.PopPicker();
+      			mui.ajax({
+		      			url:basicUrl+'scobm/index', //tp5
+		      			data:{},
+		      			dataType:'json',//服务器返回json格式数据
+		      			type:'get',//HTTP请求类型
+		      			timeout:10000,//超时时间设置为10秒；
+		      			success:function(data){
+		      					
+								var bmObj=eval(data);
+								var bmArray=[];
+								for(var i=0;i<bmObj.length;i++){
+									bmArray.push({value:bmObj[i].bmid,text:bmObj[i].bmname});
+									
+								}
+	
+								bmPicker.setData(bmArray);
+		      			},
+		      			error:function(xhr,type,errorThrown){
+		      				mui.toast('网络连接失败，请联系管理员');
+//							console.log(type);
+		      			}
+	      		});
+				
+				bmPicker.show(function(item){
+						bm.value=item[0].text;	
+				});
+      		},false);
+      	   
+      	   
+      	   //选择用户
+      		username.addEventListener('tap',function(event){
+				var obj=null;
+				 var bm_name=bm.value;
+      			var userPicker=new  mui.PopPicker();
+      			if(bm_name!='' && bm_name.length>0){ 
+	      			mui.ajax(
+		      			{
+		      			url:basicUrl+'syhqx/index',
+		      			data:{
+		      				bmname:bm.value
+		      			},
+		      			dataType:'json',//服务器返回json格式数据
+		      			type:'get',//HTTP请求类型
+		      			timeout:10000,//超时时间设置为10秒；
+		      			success:function(data){
+								obj=eval(data);
+								var arr=[];
+								for(var i=0;i<obj.length;i++){
+									arr.push({value:obj[i].YHID,text:obj[i].YHName});
+								}
+	
+								userPicker.setData(arr);
+		      			},
+		      			error:function(xhr,type,errorThrown){
+		      				mui.toast('网络连接失败，请联系管理员');
+		      			}
+		      		});
+		      		
+		      		//显示用户popicker
+		      		userPicker.show(function(item){
+						username.value=item[0].text;	
+					});
+      			}else{
+      				mui.toast('请先选择部门！');
+      			}
+	
+				
+      		},false);
+     
+     	   //权限读取
+     	   function syhqx(yhname){
+     	   	    mui.ajax({
+	      			url:basicUrl+'syhqxd/index',
+	      			data:{yhname:yhname},
+	      			dataType:'json',//服务器返回json格式数据
+	      			type:'get',//HTTP请求类型
+	      			timeout:10000,//超时时间设置为10秒；
+	      			success:function(data){
+							localStorage.removeItem('qx');
+							localStorage.setItem("qx", JSON.stringify(data));
+	      			},
+	      			error:function(xhr,type,errorThrown){
+	      				mui.toast('网络连接失败，请联系管理员');
+	      			}
+	      		});
+     	   }
+     
+     		//登录处理
+      		document.getElementById('login').addEventListener('tap',function(){
+      			
+//    			if(bm.value='' || bm.value.length<=0){
+//    				return
+//    			}
+//    			
+//    			if(username.value!='' ||  username.value.length<=0){
+//    				return
+//    			}
+	      		mui.ajax(
+	      			{
+	      			url:basicUrl+'syhqx/check',
+	      			data:{
+	      				bmname:bm.value,
+	      				yhname:username.value,
+	      				pwd:pass.value
+	      			},
+	      			dataType:'json',//服务器返回json格式数据
+	      			type:'get',//HTTP请求类型
+	      			timeout:10000,//超时时间设置为10秒；
+	      			success:function(data){
+	      				if(data=='1'){
+	      					
+	      					mui.toast("欢迎你"+username.value+"登陆成功");
+//	      					console.log(data);
+	      					syhqx(username.value);  //权限查询 
+							//打开主页面	
+			    			mui.openWindow({
+	      						id:'main.html'
+      						});
+
+	      				}else{
+	      					mui.toast('用户名或密码错误，登陆失败！')
+	      				}
+	      			},
+	      			error:function(xhr,type,errorThrown){
+	      				mui.toast('网络连接失败，请联系管理员');
+	      			}
+	      		});
+      		});
+      	
+      	
+      	
+      	});
+    </script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="css/mui.picker.css"/>
+    <link rel="stylesheet" href="css/mui.poppicker.css" />
+    <style type="text/css">
+    	
+    	*{
+    		background-colr:#00ff00;
+    		font-family: "微软雅黑";
+    		/*background-image: url(img/1.jpg);*/
+    	}
+    	
+    	.mui-input-group{
+    		margin-top: 10px;
+    		
+    	}
+    	.mui-bar-nav{
+				background-color: #2094DF;
+				color:white;
+			}
+		
+		.mui-title,.mui-icon-left-nav{
+				color:white;
+		}
+    </style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <h1 class="mui-title">东友商砼管理软件</h1>
+	    
+	</header>
+	<div  class="mui-content">
+	  <div id='userResult' class="ui-alert"></div>	
+	    <form class="mui-input-group">
+	    	
+	    	 <div class="mui-input-row">
+	            <label>部门</label>
+	            <input id="bm" type="text" class="mui-input-clear"  placeholder="请选择部门">
+	        </div>
+	        <div class="mui-input-row">
+	            <label>用户</label>
+	            <input id="username" type="text"  class="mui-input-clear" placeholder="请选择用户名">
+	        </div>
+	         <div class="mui-input-row">
+	            <label>密码</label>
+	            <input id="pass" type="password"  class=" mui-input-password" placeholder="请输入密码">
+	        </div>
+	        
+	    </form>
+	    <form class="mui-input-group">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						自动登录
+						<div id="autoLogin" class="mui-switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</li>
+				</ul>
+		</form>
+	
+	<div class="mui-content-padded">
+				<button id='login' class="mui-btn mui-btn-block mui-btn-primary">登录</button>
+				<!--<div class="link-area">
+					<a id='reg'>注册账号</a> 
+					<span class="spliter">|</span> <a id='forgetPassword'>忘记密码</a>
+				</div>-->
+		</div>
+		<div class="mui-content-padded oauth-area">
+
+		</div>
+	</div>
+</body>
+
+</html>

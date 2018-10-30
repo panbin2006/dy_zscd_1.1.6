@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.css" rel="stylesheet" />
+		<style type="text/css">
+			.ul li{
+				margin-top: 10px;
+			}
+		</style>
+		<script src="../../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function(){
+				mui.ajax({
+		            url:'http://39.108.7.251:88/testmssql/mat/matinList.php',
+		            type:'GET',
+		            success:function(data){
+						var obj=eval('('+data+')');
+						var str='';
+						for(var i=0;i<obj.length;i++){
+							var quality = Number(obj[i].Quality/1000);
+							str+='<li class="mui-table-view-cell">';
+							str+='<a id="matinD" class="mui-navigate-rigth">';
+							str+='<div style="width:70%;float: left">';
+							str+='<p style="font-style: inherit; font-size: 15px;">'+obj[i].MatName+'</p>';
+							str+='<p style="font-style: inherit; font-size: 15px;">'+obj[i].SupplierName+'</p>';
+							str+='<p style="font-style: inherit; font-size: 15px;">'+obj[i].CarID+'</p>';
+							str+='</div>';
+							
+							str+='<div style="width:30%;float: right">';
+							str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">净重：'+quality+'</p>';
+							str+='</div>';
+							str+='</a>';
+							str+='</li>';
+						}
+						
+						mpplanList=document.getElementById('mpplanList');
+						mpplanList.innerHTML=str;
+		            },
+		            error:function(xhr,type,errorThrown){
+		                mui.toast(type);
+		            }
+		      });   
+	       });
+	</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">原材料入库列表</h1>
+		</header>
+		
+		<div class="mui-content">
+		   	 <div class="mui-segmented-control">
+		        <a class="mui-control-item mui-active" href="#item1">按材料分类</a>
+		        <a class="mui-control-item" href="#item2">按供应商分类</a>
+		  	</div>
+		    <ul id='mpplanList' class="mui-table-view">
+		            <li class="mui-table-view-cell">
+		               
+		            </li>
+		    </ul>
+		</div>
+		
+	</body>
+
+</html>
