@@ -156,7 +156,8 @@
 					"html/home/mat/matinList.html",
 					"html/home/mpplancust/mpplancust_list.html",
 					"html/home/car/carList.html",
-					"html/home/test/test.html"
+					"html/home/test/test.html",
+					"html/home/test/test_mpplancust_list.html"
 				],
 				"priority": 0
 			},

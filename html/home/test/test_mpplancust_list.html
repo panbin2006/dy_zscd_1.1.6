@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+		<style>
+			.mui-bar-nav{
+				height: 50px;
+			}
+			.mui-content{
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">订货单</h1>
+			<a class="mui-icon mui-icon-plusempty mui-pull-right" id = "mpplancust_create"></a>
+		</header>
+		<div class="mui-content">
+			<div id="popover" class="mui-popover">
+				  <ul class="mui-table-view">
+				  	<li id='ins' class="mui-table-view-cell active"><a href="#">导入</a></li>
+				    <li id='edit' class="mui-table-view-cell active"><a href="#">修改</a></li>
+				    <li id='del' class="mui-table-view-cell active"><a href="#">删除</a></li>
+				  </ul>
+			</div>
+			<ul id='list' class="mui-table-view">
+				<!--js填充列表-->
+			</ul>
+			
+		</div>
+		<!--<nav class="mui-bar mui-bar-tab">
+		    
+	    </nav>-->
+
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/webviewGroup.js"></script>
+		<script src="../../../js/common.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				gestureConfig:{
+				   tap: true, //默认为true
+				   doubletap: true, //默认为false
+				   longtap: true, //默认为false
+				   swipe: true, //默认为true
+				   drag: true, //默认为true
+				   hold:false,//默认为false，不监听
+				   release:false//默认为false，不监听
+				}
+			});
+			//监听refresh事件，从mpplancust_create返回后，刷新本页列表
+			window.addEventListener('refresh',function(){
+			     location.reload();//父页面仅仅是刷新页面，当然也可以自定义逻辑函数写在里面 
+			})
+			
+			
+			var pdate = myData(Date());
+			
+			//刷新页面数据
+			function refresh(){
+				mui.ajax({
+					url: basicUrl + 'mpplancust/index',
+					data: {},
+					type: 'GET',
+					success: function(data) {
+//						mui.toast(data);
+						var obj = eval('(' + data + ')');
+						var str = '';
+						for(var i = 0; i < obj.length; i++) {
+//							console.log( obj[i].ProjectName);
+							str += '<li id="'+ obj[i].PlanID +'" class="mui-table-view-cell mui-collapse">';
+								str += '<a id="mpplanD" class="mui-navigate-rigth" href="#">';
+									//计划单一级列表左
+									str += '<div style="width:70%;float: left">';
+										str += '<p class="main" >' + obj[i].PlanID + '</p>';
+										str += '<p  class="mui-ellipsis main">' + obj[i].ProjectName + '</p>';
+										str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">施工部位：'+obj[i].Part+'</p>';
+									    str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">计划开盘：'+obj[i].PDate.substr(0,16)+'</p>';
+									str += '</div>';
+			
+									//计划单一级列表右
+									str += '<div style="width:30%;float: right">';
+		//															str+='<p style="font-style: inherit; font-size: 15px;">'+state+'</p>';
+										str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">坍落度：'+obj[i].tld+'</p>';
+										str += '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">强度：'+obj[i].Grade+obj[i].TSName+'</p>';
+										str += '<p  class="mui-ellipsis datil">订货量：' + Number(obj[i].QualityPlan) + '</p>';
+									str += '</div>';
+								str += '</a>';
+							str += '</li>';
+						};
+						
+						mpplanList = document.getElementById('list');
+						mpplanList.innerHTML = str;
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(basicUrl + 'mpplancust/index');
+						mui.toast(type);
+					}
+				});
+			}
+			
+			mui.plusReady(function() {
+				//加载数据
+				refresh();
+				//新增订单
+				qxcx(); //读取权限
+				document.getElementById('mpplancust_create').addEventListener('tap',function(){
+	      			if(qx[1].PAdd=='1'){
+	      				//生成订货单编号
+	      				var pdate = getNowFormatDate();
+//	      				console.log(pdate);
+	      				var dh = coding('Mpplancust','01',1,pdate,'');
+//	      				console.log(dh);
+						
+		      			mui.openWindow({
+		      				url:'mpplancust_create.html',
+		      				id:'mpplancust_create',
+		      				styles:{},
+						    extras:{},
+						    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
+						    show:{
+						      autoShow:true,//页面loaded事件发生后自动显示，默认为true
+						      event:'titleUpdate',//页面显示时机，默认为titleUpdate事件时显示
+						      extras:{}//窗口动画是否使用图片加速
+						    },
+						    waiting:{
+						      autoShow:true,//自动显示等待框，默认为true
+						      title:'正在加载...',//等待对话框上显示的提示内容
+						      options:{}
+						    },
+						    extras:{ //传递订单号到新增页面
+						        dh:dh
+						    }
+		      			});
+	      			}else{
+	      				mui.toast("您没有此操作权限，请联系管理员！");
+	      			}
+	      		});
+	      		
+	      		//长按订单列表项，显示弹出菜单
+	      		mui(".mui-table-view").on('longtap','.mui-table-view-cell',function(event){
+					  //获取id
+					  var id = this.getAttribute("id");
+					  
+//					  mui.toast(id);
+					  mui('.mui-popover').popover('toggle',this);
+					  console.log(mui('.mui-popover')[0][0].getAttribute('class'));
+//					  console.log(mui('.mui-popover')[0]);
+//					  //传值给详情页面，通知加载新数据
+//					  mui.fire(detail,'getDetail',{id:id});
+//					  //打开新闻详情
+//					  mui.openWindow({
+//					    id:'detail',
+//					    url:'detail.html'
+//					  });
+				})
+	      		
+	      		
+	      		//弹出菜单点击处理函数，删除、审核、修改
+	      		mui('.mui-table-view').on('tap', '.active', function() {
+
+					var id = this.getAttribute('id');
+//					this.setAttribute('value',)
+					console.log(id);
+					mui('.mui-popover').popover('toggle');
+				});
+				
+//				document.getElementById('ins').addEventListener('tap',function(){
+//					console.log('ins');
+//				});
+
+			});
+			
+			
+		</script>
+	</body>
+
+</html>

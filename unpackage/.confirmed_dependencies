@@ -28,7 +28,9 @@
 			"html/home/car/carList.html",
 			"html/home/mpplancust/mpplancust_list.html",
 			"html/home/msaleodd/msaleoddList.html",
-			"html/home/mpplan/mpplan_main.html"
+			"html/home/mpplan/mpplan_main.html",
+			"html/home/test/test.html",
+			"html/home/test/test_mpplancust_list.html"
 		]
 	},
 	"html/home/mpplancust/mpplancust_list.html": {

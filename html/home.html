@@ -93,6 +93,7 @@
 									<div class="mui-media-body">车辆管理</div>
 								</a>
 							</li>
+							
 						</ul>
 				</div>
 				
@@ -133,11 +134,10 @@
 									<div  class="mui-media-body">原材料管理</div>
 								</a>
 							</li>
-							
 							<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
-								<a id='car' href="#">
+								<a id='test' href="#">
 									<span class="mui-icon iconfont icon-jiaobanche"></span>
-									<div class="mui-media-body">车辆管理</div>
+									<div class="mui-media-body">测试</div>
 								</a>
 							</li>
 						</ul>
@@ -252,11 +252,8 @@
 		      			mui.openWindow({
 		      				url:'home/mpplan/mpplan_main.html',
 		      				id:'mpplan',
-		      				styles:{
-						     
-						    },
-						    extras:{
-						    },
+		      				style:{},
+						    extras:{},
 						    createNew:false,//是否重复创建同样id的webview，默认为false:不重复创建，直接显示
 						    show:{
 						      autoShow:true,//页面loaded事件发生后自动显示，默认为true
@@ -266,11 +263,7 @@
 						    waiting:{
 						      autoShow:true,//自动显示等待框，默认为true
 						      title:'正在加载...',//等待对话框上显示的提示内容
-						      options:{
-		//					        width:waiting-dialog-widht,//等待框背景区域宽度，默认根据内容自动计算合适宽度
-		//					        height:waiting-dialog-height,//等待框背景区域高度，默认根据内容自动计算合适高度
-		//					        ......
-						      }
+						      options:{}
 						    }
 		      			});
 	      			}else{
@@ -388,12 +381,12 @@
 	      		});
 	      		
 	      		//测试
-//	      		document.getElementById('test').addEventListener('tap',function(){
-//	      			mui.openWindow({
-//	      				url:"home/test/test.html",
-//	      				id:'test.html'
-//	      			});
-//	      		});
+	      		document.getElementById('test').addEventListener('tap',function(){
+	      			mui.openWindow({
+	      				url:"home/test/test_mpplancust_list.html",
+	      				id:'test.html'
+	      			});
+	      		});
 	      		
 	      	});
 	      	

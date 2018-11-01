@@ -1,6 +1,6 @@
-var basicUrl='http://39.108.7.251:88/zzcd01_tp5/public/index/';
-//var basicUrl='http://192.168.101.88/zzjb_tp5/public/index/';
-//var basicUrl='http://192.168.1.100:88/zzjb_tp5/public/index/';
+//var basicUrl='http://39.108.7.251:88/zzcd01_tp5/public/index/';
+var basicUrl='http://192.168.101.88/zscd01_tp5/public/index/';
+//var basicUrl='http://192.168.1.100:88/zscd01_tp5/public/index/';
 
 //获取当前时间，格式YYYY-MM-DD
     function getNowFormatDate() {
