@@ -13,12 +13,14 @@
 	"index.html": {
 		"refer": [
 			"main.html"
-		]
+		],
+		"resources": []
 	},
 	"html/home/mpact/mpactList.html": {
 		"refer": [
 			"html/home/mpact/mpact_detail.html"
-		]
+		],
+		"resources": []
 	},
 	"html/home.html": {
 		"refer": [
@@ -31,16 +33,35 @@
 			"html/home/mpplan/mpplan_main.html",
 			"html/home/test/test.html",
 			"html/home/test/test_mpplancust_list.html"
-		]
+		],
+		"resources": []
 	},
 	"html/home/mpplancust/mpplancust_list.html": {
 		"refer": [
 			"html/home/mpplancust/mpplancust_create.html"
-		]
+		],
+		"resources": []
 	},
 	"html/home/mpplancust/mpplancust_create.html": {
 		"refer": [
 			"html/home/mpplancust/mpplancust_list.html"
+		],
+		"resources": []
+	},
+	"login.html": {
+		"refer": [
+			"index.html",
+			"main.html"
+		],
+		"resources": []
+	},
+	"html/home/test/test_mpplancust_list.html": {
+		"resources": [
+			"html/home/test/test_mpplancust_crate.html"
+		],
+		"refer": [
+			"html/home/test/test_mpplancust_crate.html",
+			"html/home/test/mpplancust_edit.html"
 		]
 	}
 }

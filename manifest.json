@@ -181,6 +181,23 @@
 					"html/home/mpplancust/mpplancust_list.html"
 				],
 				"priority": 0
+			},
+			"login.html": {
+				"resources": [],
+				"refer": [
+					"index.html",
+					"main.html"
+				],
+				"priority": 0
+			},
+			"html/home/test/test_mpplancust_list.html": {
+				"resources": [
+					"html/home/test/test_mpplancust_crate.html"
+				],
+				"refer": [
+					"html/home/test/mpplancust_edit.html"
+				],
+				"priority": 0
 			}
 		},
 		"idle": {

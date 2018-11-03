@@ -238,9 +238,7 @@ mui.plusReady(function() {
 
 	//3.选择工程
 	inp_arr['projectname'].addEventListener('blur', function(event) {
-//		console.log('match');
 		var str = inp_arr['projectname'].value;
-//		console.log(str);
 		mui.ajax({
 			url: basicUrl + 'Mpactm/match', //tp5
 			data: {
@@ -252,7 +250,6 @@ mui.plusReady(function() {
 			success: function(data) {
 
 				var obj = eval('(' + data + ')');
-				
 				$$('#coid').val(obj[0].coid);
 				$$('#projectid').val(obj[0].projectid);
 				$$('#custid').val(obj[0].custid);
@@ -260,6 +257,10 @@ mui.plusReady(function() {
 				$$('#htbh').val(obj[0].htbh);
 				$$('#buildid').val(obj[0].buildid);
 				$$('#buildname').val(obj[0].buildname);
+				$$('#classid1').val(obj[0].classid1);
+				$$('#classname1').val(obj[0].classname1);
+				$$('#classname5').val(obj[0].classname5);
+				 
 				
 			},
 			error: function(xhr, type, errorThrown) {
@@ -290,35 +291,43 @@ mui.plusReady(function() {
 		btrans 		= '';
 		qualityplan = inp_arr['qualityplan'].value;
 		remark1		=inp_arr['remark1'].value;
-//		console.log('save');
+		classid1    =inp_arr['classid1'].value;
+		classname1  = inp_arr['classname1'].value;
+		classname5  = inp_arr['classname5'].value;
+		createtime  = new Date().format("yyyy-MM-dd hh:mm:ss");
+		noteman     = 'admin';
+		console.log(createtime);
 		mui.ajax({
   			url:basicUrl+'mpplancust/save', //tp5
   			data:{
   				
-  				PlanID    	:planid,       //'B1810260002',
-				PlanName  	:planname,       //'B1810260002',
-				CoID      	:coid,
-				Pline     	:pline,
-				PDate     	:pdate, //'2018-10-29 21:30:00', 
-				ProjectID 	:projectid,
-				ProjectName	:projectname,
-				CustID 		:custid,
-				CustName	:custname,
-				Grade		:grade,
-				TDIS		:tsid,
-				TSName		:tsname,
-				tld			:tld,
-				Part		:part,
-				BTrans		:'',
-				QualityPlan	:qualityplan
+  				PlanID    	:planid,       //计划单号
+				PlanName  	:planname,      //计划名称
+				CoID      	:coid,			//分站代码
+				Pline     	:pline,			//计划生产线
+				PDate     	:pdate, 		//开盘时间
+				ProjectID 	:projectid,		//工程代码
+				ProjectName	:projectname,   //工程名称
+				CustID 		:custid,		//客户代码
+				CustName	:custname,		//客户名称
+				Grade		:grade,         //强度等级
+				TDIS		:tsid,			//特殊要求代码array
+				TSName		:tsname,	    //特殊要求array
+				tld			:tld,			//坍落度
+				Part		:part,			//部位
+				BTrans		:'', 			//施工方式
+				QualityPlan	:qualityplan,   //订货方量
+				ClassID1	:classid1,      //业务员编号
+				ClassName1  :classname1,	//业务员名称
+				ClassName5	:classname5,    //结款类型
+//				CreateTime  :createtime,     //录入时间
+				NoteMan     :noteman 		//录入人
 		  	},
   			dataType:'json',//服务器返回json格式数据
   			type:'get',//HTTP请求类型
   			timeout:10000,//超时时间设置为10秒；
   			success:function(data){
-//					console.log('save');
 					var obj=eval('(' + data + ')');
-//					console.log(data);
 					mui.toast('订单保存成功！');
 					//关闭窗口，回到mpplancust_list页面
 					mui.back();
@@ -419,7 +428,23 @@ mui.plusReady(function() {
 		            <label>备    注</label>
 		            <input id="remark1" type="textare" class="mui-input-clear" placeholder="备注">
 		        </div>
+		        <div class="mui-input-row  ">
+		            <label>业务员编号</label>
+		            <input id="classid1" type="text" class="mui-input-clear" ">
+		        </div>
+		         <div class="mui-input-row  ">
+		            <label>业务员</label>
+		            <input id="classname1" type="text" class="mui-input-clear" ">
+		        </div>
 		        
+		         <div class="mui-input-row  ">
+		            <label>结款类型</label>
+		            <input id="classname5" type="text" class="mui-input-clear" ">
+		        </div>
+		         <div class="mui-input-row  ">
+		            <label>录入人</label>
+		            <input id="noteman" type="text" class="mui-input-clear" ">
+		        </div>
 		        
 		    </form>
 		    

@@ -58,20 +58,22 @@
 		    var custname='';   //客户名称
 		    var execState='';  //工程执行状态
 		    var qx=null;       //用户权限
+		    //左滑菜单审核桉钮样式
 		    var shstyle=['sh mui-btn mui-btn-red mui-icon iconfont icon-shenhe2','sh mui-btn mui-btn-red mui-icon iconfont icon-fanshenhe'];
+		    //合同执行状态数组
 		    var states=[{value:'1',text:'未执行'},
 		    			{value:'2',text:'暂停'},
 		    			{value:'3',text:'正在执行'},
 		    			{value:'4',text:'正常完毕'},
 		    		  ];
-			mui.init(
-				
-			);
+		    //mui初始化
+			mui.init();
 			
-			qxcx(); //查询权限
+			//查询权限
+			qxcx(); 
+			
 			//显示合同
 			function show(projectname,custname){
-				plus.nativeUI.showWaiting("数据加载中……");
 		       	mui.ajax({
 		            url:basicUrl+'mpactm/index',
 		            data:{
@@ -84,27 +86,19 @@
 						var str='';
 						var sh_btn='';
 						var shzt=['未审核','已审核'];
-//						var sh_style=['mui-btn mui-btn-yellow mui-icon mui-icon-compose'];
 						for(var i=0;i<obj.length;i++){
-//							if(obj[i].shtag=='1'){
-//							  sh_btn='<a id="'+obj[i].projectid +'"  value="1" class="sh mui-btn mui-btn-red mui-icon iconfont icon-fanshenhe"></a>';
-////							  sh_btn='<a id="'+obj[i].projectid +'"  onclick="sh(id,0)"  class="mui-btn mui-btn-red mui-icon iconfont icon-fanshenhe sh"></a>';
-//							}else{
-//								
-//							 sh_btn='<a id="'+obj[i].projectid +'"   value="0" class="sh mui-btn mui-btn-red mui-icon iconfont icon-shenhe2 "></a>';
-////							 sh_btn='<a id="'+obj[i].projectid +'"  onclick="sh(id,1)"  class="mui-btn mui-btn-red mui-icon iconfont icon-shenhe2 sh"></a>';
-//							}
-////							console.log(obj[i].projectid+':'+obj[i].shtag);
-              
+              				//合同订单list
 							str+='<li  class="mui-table-view-cell">';
-							
+								
+								//左滑菜单按钮
 								str+='<div id="div" class="mui-slider-right mui-disabled">';
 					    			str+='<a id="'+obj[i].projectid +'"   value="'+obj[i].shtag+'" class="'+shstyle[obj[i].shtag]+'"></a>';
 									str+='<a id="'+obj[i].projectid +'"   class="mui-btn mui-btn-yellow mui-icon mui-icon-compose xgzt"></a>';
-					    			//onclick="upState(id)"
 					    		str+='</div>';
 					    		
+					    		
 					    		str+='<div class="mui-slider-handle">';
+					    			//list左
 									str+='<div   style="width:75%;float: left">';
 										str+='<a  id="'+ obj[i].projectid + '" class="mui-navigate-rigth" onclick="open_detail(id)">';
 											str+='<p  class="mui-ellipsis detail">工程代码：'+obj[i].projectid+'</p>';
@@ -112,10 +106,12 @@
 											str+= '<p  class="mui-ellipsis detail">客户名称：'+obj[i].custname+'</p>';
 										str+='</a>';
 									str+='</div>';
+									//list右
 									str+='<div  id="aaaaaa" style="width:25%;float:right">';
 										str+= '<a  class="mui-ellipsis detail" ">'+obj[i].execstate+'</a></br>';
 										str+='<a  id="bbbbbbbbb" class="mui-ellipsis detail" ">'+shzt[obj[i].shtag]+'</a></br>';
 									str+='</div>';
+									
 								str+='</div>';
 								
 							str+='</li>';
@@ -123,7 +119,6 @@
 						
 						mpplanList=document.getElementById('task');
 						mpplanList.innerHTML=str;
-						plus.nativeUI.closeWaiting()
 		            },
 		            error:function(xhr,type,errorThrown){
 		                mui.toast(type);
@@ -169,24 +164,7 @@
 				})
 				     	
 			}
-//			
-//			//修改合同执行状态选择框(标签传值)
-//			function upState(projectid){
-////				mui.toast(projectid);
-//				var statePicker=new mui.PopPicker();
-//				var elem=this;
-//				var div =elem.parentNode.parentNode.childNodes[1].childNodes[1]; //返回执行状态a标签的父div
-//				var a = div.getElementsByTagName('a')[0];  //返回执行状态的a标签
-//				//mui.toast(a.innerHTML);
-//				statePicker.setData(states);
-//				statePicker.show(function(item){
-//					execState=item[0].text;
-//					upStateAjax(projectid,execState);
-//					a.innerHTML=execState;
-////					mui.toast(execState);
-//				});
-//				
-//			}
+
 
 //			修改合同状态
 			function upStateAjax(projectid,execState){
@@ -329,7 +307,7 @@
 		   	<span class="mui-icon "></span>
 		    <ul id='task' class="mui-table-view">
 		            <li class="mui-table-view-cell">
-		               <button type="button" class="mui-btn mui-btn-red mui-btn-block">按钮</button>
+		            		<!--合同订单列表填充-->
 		            </li>
 		    </ul>
 		</div>

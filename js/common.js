@@ -18,6 +18,50 @@ var basicUrl='http://192.168.101.88/zscd01_tp5/public/index/';
         var currentdate = year + seperator1 + month + seperator1 + strDate;
         return currentdate;
     }
+    
+//获取当前时间
+	function getNowFormatTime(){
+		var date     = new Date();
+		var hour     = date.getHours();
+		var minute  = date.getMinutes();
+		var second   = date.getSeconds();
+		if(hour>=0 && hour<=9){
+			hour = '0'+hour;
+		}
+		if(minute>=0 && minute<=9){
+			minute= '0'+minute;
+		}
+		if(second>=0 && second<=9){
+			second = '0'+second;
+		}
+		var strTime = hour + ':' + minute +':' + second;
+		return strTime;
+	}
+	
+	Date.prototype.format = function (format) {
+           var args = {
+               "M+": this.getMonth() + 1,
+               "d+": this.getDate(),
+               "h+": this.getHours(),
+               "m+": this.getMinutes(),
+               "s+": this.getSeconds(),
+               "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+               "S": this.getMilliseconds()
+           };
+           if (/(y+)/.test(format))
+               format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+           for (var i in args) {
+               var n = args[i];
+               if (new RegExp("(" + i + ")").test(format))
+                   format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? n : ("00" + n).substr(("" + n).length));
+           }
+           return format;
+          	// 调用方法
+			//alert(new Date().format("yyyy-MM-dd hh:mm:ss:S"));
+			//alert(new Date().format("yyyy-MM-dd hh:mm:ss"));
+    };
+
+
 //日期格式化
 function myData(date){
     var date= new Date(Date.parse(date));  
@@ -43,11 +87,19 @@ function myDataE(date){
 	return myData(date)+' 23:59:59';
 }
 
-//h6中type=datetime-local 的日期时间转为yyyy-mm-dd hh:nn:ss
+//h5中type=datetime-local 的日期时间转为yyyy-mm-dd hh:nn:ss
 function Localdatastr(str){
 		var ymd = str.substr(0,10);
 		var hn = str.substr(11,5);
 		var datastr = ymd +' '+hn;
+		return datastr;
+}
+
+//h5中的日期时间字符串转为yyyy-mm-ddThh:nn:ss
+function LocaldatastrT(str){
+		var ymd = str.substr(0,10);
+		var hn = str.substr(11,5);
+		var datastr = ymd +'T'+hn;
 		return datastr;
 }
 
@@ -64,6 +116,7 @@ function Localdatastr(str){
 		//}else{
 		//	mui.toast(0);
 		//}
+		return qx;
 	}
 				
 				

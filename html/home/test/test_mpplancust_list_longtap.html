@@ -6,7 +6,6 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
-		<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css"/>
 		<style>
 			.mui-bar-nav{
 				height: 50px;
@@ -77,13 +76,12 @@
 //							console.log( obj[i].ProjectName);
 							str += '<li id="'+ obj[i].PlanID +'" class="mui-table-view-cell mui-collapse">';
 									//左滑菜单按钮
-								str+='<div id="btn_items" class="mui-slider-right mui-disabled">';
-					    			str+='<a id="'+ obj[i].PlanID  +'"   class="mui-btn mui-btn-yellow mui-icon mui-icon-compose edit"></a>';
-									str+='<a id="'+ obj[i].PlanID  +'"   class="mui-btn mui-btn-red mui-icon mui-icon-trash del"></a>';
-					    		str+='</div>';
-					    		
-					    		
-					    		str+='<div class="mui-slider-handle">';		
+									str+='<div id="div" class="mui-slider-right mui-disabled">';
+										str+='<id="'+obj[i].PlanID +'"    class="xg"><span class="mui-icon mui-icon-compose"></span></a>';
+										str+='<a id="'+obj[i].PlanID +'"    class="sh"><span class="mui-icon mui-icon-trash"></span></a>';
+						    		str+='</div>';
+						    		
+						    		str+='<div class="mui-slider-handle">';
 										//计划单一级列表左
 										str += '<div style="width:70%;float: left">';
 											str += '<p class="main" >' + obj[i].PlanID + '</p>';
@@ -117,23 +115,6 @@
 				refresh();
 				//新增订单
 				qxcx(); //读取权限
-				
-				//预加载订单修改窗口
-				var  mpplancust_edit =null;
-				mpplancust_edit=mui.preload({
-					url:'mpplancust_edit.html',
-					id:'mpplancust_edit.html'
-				});
-				
-				//预加载订单新增窗口
-				var  mpplancust_create =null;
-				mpplancust_create=mui.preload({
-					url:'test_mpplancust_create.html',
-					id:'mpplancust_create'
-				});
-				
-				
-				
 				document.getElementById('mpplancust_create').addEventListener('tap',function(){
 	      			if(qx[1].PAdd=='1'){
 	      				//生成订货单编号
@@ -167,49 +148,38 @@
 	      			}
 	      		});
 	      		
+	      		//长按订单列表项，显示弹出菜单
+	      		mui(".mui-table-view").on('longtap','.mui-table-view-cell',function(event){
+					  //获取id
+					  var id = this.getAttribute("id");
+					  
+//					  mui.toast(id);
+					  mui('.mui-popover').popover('toggle',this);
+					  console.log(mui('.mui-popover')[0][0].getAttribute('class'));
+//					  console.log(mui('.mui-popover')[0]);
+//					  //传值给详情页面，通知加载新数据
+//					  mui.fire(detail,'getDetail',{id:id});
+//					  //打开新闻详情
+//					  mui.openWindow({
+//					    id:'detail',
+//					    url:'detail.html'
+//					  });
+				})
 	      		
-	      		//修改订单
-	      		mui("#list").on('tap','.edit',function(){
-				    //获取id
-				    var dh = this.getAttribute("id");
-//				    console.log('edit'+dh);
-				    //传值修改页面，通知加载新数据
-				    mui.fire(mpplancust_edit,'get_edit',{dh:dh});
-//					打开
-					mpplancust_edit.show();
-				}) 
-				
-				
-				//删除订单
-				mui("#list").on('tap','.del',function(){
-					//获取id
-				    var id = this.getAttribute("id");
-				    mui.confirm('删除订单： '+id+' ，确认吗？', '删除订单', ['取消','确定'], function(e) {
-						if (e.index == 1) {
-							console.log('1');
-							mui.ajax({
-					  			url:basicUrl+'mpplancust/save', //tp5
-					  			data:{
-					  				id:id
-							  	},
-					  			dataType:'json',//服务器返回json格式数据
-					  			type:'get',//HTTP请求类型
-					  			timeout:10000,//超时时间设置为10秒；
-					  			success:function(data){
-										var obj=eval('(' + data + ')');
-										mui.toast('订单保存成功！');
-										//关闭窗口，回到mpplancust_list页面
-										mui.back();
-					  			},
-					  			error:function(xhr,type,errorThrown){
-					  				mui.toast('网络连接失败，请联系管理员');
-					  			}
-					  		});
-						}else{
-							console.log('000');
-						}
-					});
+	      		
+	      		//弹出菜单点击处理函数，删除、审核、修改
+	      		mui('.mui-table-view').on('tap', '.active', function() {
+
+					var id = this.getAttribute('id');
+//					this.setAttribute('value',)
+					console.log(id);
+					mui('.mui-popover').popover('toggle');
 				});
+				
+//				document.getElementById('ins').addEventListener('tap',function(){
+//					console.log('ins');
+//				});
+
 			});
 			
 			

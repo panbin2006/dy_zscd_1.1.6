@@ -1,0 +1,471 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../../css/jquery_style.css" />
+		<link rel="stylesheet" href="../../../css/jquery-ui.css" />
+		<style>
+			.TextBoxReadWrite
+			{
+				border:1px solid #C0C0C0;
+				background-color:#FFFFFF;
+				readonly:expression(this.readOnly=false);
+			}
+			
+			.mui-input-row{
+				margin-top: 10px;
+				
+			}
+			
+			.active-but{
+				margin-top: 20px;
+			}
+		</style>
+	</head>
+
+	<body onresize="document.activeElement.scrollIntoView(true);">
+<script src="../../../js/mui.min.js"></script>
+<script type="text/javascript" src="../../../js/common.js" ></script>
+<script type="text/javascript" src="../../../js/jquery-1.9.1.js" ></script>
+<script type="text/javascript" src="../../../js/jquery-ui.js" ></script>
+<script type="text/javascript">
+mui.init({
+	beforeback: function(){
+		//获得列表界面的webview
+		var list = plus.webview.getWebviewById('mpplancust');
+		//触发列表界面的自定义事件（refresh）,从而进行数据刷新
+		mui.fire(list,'refresh');
+		//返回true，继续页面关闭逻辑
+		return true;
+	}
+});
+
+
+/**
+ *MUI代码  
+ */
+mui.plusReady(function() {
+	//定义jquery调用方式
+	var $$ = jQuery.noConflict();
+	
+	//1.获取表单对象数组
+	var inp_arr = getElements('custform');
+	
+	var dh = null;
+
+	//文本自动补全函数
+	function auto(input,arr){ //input:文本框id,arr :传入的数组
+		$$(function(){
+//			console.log(input);
+//			console.log(arr);
+			$$(input).autocomplete({
+			    source: arr
+			    
+			});
+		});
+	}
+
+	//2.根据订单号获取数据
+	//监听get_edit事件，接收 mpplancust_list传递过来的参数
+	window.addEventListener('get_edit',function(event){
+		var dh = event.detail.dh;
+		console.log(dh);
+		inp_arr['planid'].value=dh;
+		
+		mui.ajax({
+			url: basicUrl + 'mpplancust/read', 
+			data: {id:dh},
+			dataType: 'json', //服务器返回json格式数据
+			type: 'get', //HTTP请求类型
+			timeout: 10000, //超时时间设置为10秒；
+			success: function(data) {
+
+				var obj = eval('(' + data + ')');
+//				console.log(data);
+				console.log(obj.PDate.substr(0,16));
+				console.log(LocaldatastrT(obj.PDate));
+
+				inp_arr['planid'].value      = obj.PlanID;    	
+				inp_arr['coid'].value        = obj.CoID   ;  
+				inp_arr['pdate'].value       = LocaldatastrT(obj.PDate)   ;
+				inp_arr['projectid'].value   = obj.ProjectID; 
+				inp_arr['projectname'].value = obj.ProjectName;	
+				inp_arr['custid'].value      = obj.CustID 		;
+				inp_arr['custname'].value    = obj.CustName	;
+				inp_arr['grade'].value       = obj.Grade	;
+				inp_arr['tsname'].value      = obj.TSName;
+				inp_arr['tld'].value     	 = obj.tld	;
+				inp_arr['part'].value        = obj.Part;
+				inp_arr['qualityplan'].value     = parseInt(obj.QualityPlan);
+				
+			},
+			error: function(xhr, type, errorThrown) {
+				mui.toast('网络连接失败，请联系管理员');
+			}
+		});
+	});
+	
+	//3.文本框自动补全
+	//坍落度文本框自动补全
+	inp_arr['tld'].addEventListener('keyup', function(event) {
+//		console.log('change');
+		mui.ajax({
+			url: basicUrl + 'Bbtld/index', //tp5
+			data: {},
+			dataType: 'json', //服务器返回json格式数据
+			type: 'get', //HTTP请求类型
+			timeout: 10000, //超时时间设置为10秒；
+			success: function(data) {
+
+				var obj = eval('(' + data + ')');
+				var tld_arr=new Array();
+				//处理数组
+				for(var i = 0; i < obj.length; i++) {
+					tld_arr[i]=obj[i].TLD;
+				};
+				
+				auto('#tld',tld_arr);
+				
+			},
+			error: function(xhr, type, errorThrown) {
+				mui.toast('网络连接失败，请联系管理员');
+			}
+		});
+	}, false);
+	
+	
+	//强度框自动补全
+	inp_arr['tsname'].addEventListener('keyup', function(event) {
+//					console.log('tsname');
+					var str = inp_arr['tsname'].value;
+//					console.log(str);
+					mui.ajax({
+						url: basicUrl + 'Mbetoninfo/index', //tp5
+						data: {
+							type:'tsname',
+							str:str
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+			
+							var obj = eval('(' + data + ')');
+							var arr=new Array();
+//							console.log(obj[0].tsname);
+							//处理数组
+							for(var i = 0; i < obj.length; i++) {
+								arr[i]=obj[i].tsname;
+							};
+							
+							auto('#tsname',arr);
+							
+						},
+						error: function(xhr, type, errorThrown) {
+							mui.toast('网络连接失败，请联系管理员');
+						}
+					});
+	}, false);
+	
+	//强度框自动补全
+	inp_arr['grade'].addEventListener('keyup', function(event) {
+//					console.log('grade');
+					
+					var str = inp_arr['grade'].value;
+					str = str.toUpperCase();//字母转换成大写
+					inp_arr['grade'].value=str;
+//					console.log(str);
+					mui.ajax({
+						url: basicUrl + 'Mbetoninfo/index', //tp5
+						data: {
+							type:'grade',
+							str:str
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						success: function(data) {
+			
+							var obj = eval('(' + data + ')');
+							var arr=new Array();
+//							console.log(obj[0].grade);
+							//处理数组
+							for(var i = 0; i < obj.length; i++) {
+								arr[i]=obj[i].grade;
+							};
+							
+							auto('#grade',arr);
+							
+						},
+						error: function(xhr, type, errorThrown) {
+							mui.toast('网络连接失败，请联系管理员');
+						}
+					});
+	}, false);
+	
+	
+	//部位自动补全
+	inp_arr['part'].addEventListener('keyup', function(event) {
+//		console.log('part');
+		var str = inp_arr['part'].value;
+		console.log(str);
+		mui.ajax({
+			url: basicUrl + 'Bbpart/index', //tp5
+			data: {
+				str:str
+			},
+			dataType: 'json', //服务器返回json格式数据
+			type: 'get', //HTTP请求类型
+			timeout: 10000, //超时时间设置为10秒；
+			success: function(data) {
+
+				var obj = eval('(' + data + ')');
+				var arr=new Array();
+//				console.log(obj[0].Part);
+				//处理数组
+				for(var i = 0; i < obj.length; i++) {
+					arr[i]=obj[i].Part;
+				};
+				
+				auto('#part',arr);
+				
+			},
+			error: function(xhr, type, errorThrown) {
+				mui.toast('网络连接失败，请联系管理员');
+			}
+		});
+	}, false);
+	
+	//工程名称自动补全
+	inp_arr['projectname'].addEventListener('keyup', function(event) {
+//		console.log('projectname');
+		var str = inp_arr['projectname'].value;
+//		console.log(str);
+		mui.ajax({
+			url: basicUrl + 'Mpactm/byname', //tp5
+			data: {
+				str:str
+			},
+			dataType: 'json', //服务器返回json格式数据
+			type: 'get', //HTTP请求类型
+			timeout: 10000, //超时时间设置为10秒；
+			success: function(data) {
+
+				var obj = eval('(' + data + ')');
+				var arr=new Array();
+//				console.log(obj[0].projectname);
+				//处理数组
+				for(var i = 0; i < obj.length; i++) {
+					arr[i]=obj[i].projectname;
+				};
+				
+				auto('#projectname',arr);
+				
+			},
+			error: function(xhr, type, errorThrown) {
+				mui.toast('网络连接失败，请联系管理员');
+			}
+		});
+	}, false);
+
+	//3.选择工程
+	inp_arr['projectname'].addEventListener('blur', function(event) {
+//		console.log('match');
+		var str = inp_arr['projectname'].value;
+//		console.log(str);
+		mui.ajax({
+			url: basicUrl + 'Mpactm/match', //tp5
+			data: {
+				projectname:str
+			},
+			dataType: 'json', //服务器返回json格式数据
+			type: 'get', //HTTP请求类型
+			timeout: 10000, //超时时间设置为10秒；
+			success: function(data) {
+
+				var obj = eval('(' + data + ')');
+				$$('#coid').val(obj[0].coid);
+				$$('#projectid').val(obj[0].projectid);
+				$$('#custid').val(obj[0].custid);
+				$$('#custname').val(obj[0].custname);
+				$$('#htbh').val(obj[0].htbh);
+				$$('#buildid').val(obj[0].buildid);
+				$$('#buildname').val(obj[0].buildname);
+				
+			},
+			error: function(xhr, type, errorThrown) {
+				mui.toast('网络连接失败，请联系管理员');
+			}
+		});
+	
+	}, false);
+	
+	//8.保存
+	
+	document.getElementById('save').addEventListener('tap',function(event){
+//		console.log('save');
+		planid	 	= inp_arr['planid'].value;
+		planname 	= inp_arr['planid'].value;
+		coid 	 	= inp_arr['coid'].value;
+		pline    	= '1,2,3,4';
+		pdate    	= Localdatastr(inp_arr['pdate'].value);
+		projectid 	= inp_arr['projectid'].value;
+		projectname 	= inp_arr['projectname'].value;
+		custid   	= inp_arr['custid'].value;
+		custname 	= inp_arr['custname'].value;
+		grade 		= inp_arr['grade'].value;
+		tsid  		= inp_arr['tsname'].value;
+		tsname 		= inp_arr['tsname'].value;
+		tld    		= inp_arr['tld'].value;
+		part   		= inp_arr['part'].value;
+		btrans 		= '';
+		qualityplan = inp_arr['qualityplan'].value;
+		remark1		=inp_arr['remark1'].value;
+//		console.log('save');
+		mui.ajax({
+  			url:basicUrl+'mpplancust/save', //tp5
+  			data:{
+  				
+  				PlanID    	:planid,       //'B1810260002',
+				PlanName  	:planname,       //'B1810260002',
+				CoID      	:coid,
+				Pline     	:pline,
+				PDate     	:pdate, //'2018-10-29 21:30:00', 
+				ProjectID 	:projectid,
+				ProjectName	:projectname,
+				CustID 		:custid,
+				CustName	:custname,
+				Grade		:grade,
+				TSName		:tsname,
+				tld			:tld,
+				Part		:part,
+				BTrans		:'',
+				QualityPlan	:qualityplan
+		  	},
+  			dataType:'json',//服务器返回json格式数据
+  			type:'get',//HTTP请求类型
+  			timeout:10000,//超时时间设置为10秒；
+  			success:function(data){
+//					console.log('save');
+					var obj=eval('(' + data + ')');
+//					console.log(data);
+					mui.toast('订单保存成功！');
+					//关闭窗口，回到mpplancust_list页面
+					mui.back();
+			
+  			},
+  			error:function(xhr,type,errorThrown){
+  				mui.toast('网络连接失败，请联系管理员');
+  			}
+  		});
+	},false);
+	
+	//9.取消
+	document.getElementById('esc').addEventListener('tap',function(event){
+		var btn = ["确定","取消"];
+			mui.confirm('确认关闭当前窗口？','东友app',btn,function(e){
+			    if(e.index==0){
+			    	//关闭窗口，回到mpplancust_list页面
+			    	mui.back();
+			    }
+			});
+	},false);
+	
+	
+});
+</script>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">订货单编辑</h1>
+		</header>
+		<div class="mui-content">
+		    <form id="custform" class="mui-input-group">
+		    	<div class="mui-input-row">
+		            <label>订货单号</label>
+		            <input id="planid" type="text" class="mui-input-clear"  ">
+		        </div>
+		        <div class="mui-input-row ">
+		            <label>分站代码</label>
+		            <input id="coid" type="text" class="mui-input-clear" ">
+		        </div>
+		        <div class="mui-input-row">
+		            <label>开盘时间</label>
+		            <input id="pdate" type="datetime-local" class="mui-input-clear" >
+		        </div>
+		        <div class="mui-input-row  ">
+		            <label>工程代码</label>
+		            <input id="projectid" type="text" class="mui-input-clear" ">
+		        </div>
+		        
+		        <div class="mui-input-row">
+		            <label>工程名称</label>
+		            <input id="projectname" type="text" class="mui-input-clear"   placeholder="*">
+		        </div>
+		         <div class="mui-input-row  ">
+		            <label>客户代码</label>
+		            <input id="custid" type="text" class="mui-input-clear" >
+		        </div>
+		        <div class="mui-input-row ">
+		            <label>客户名称</label>
+		            <input id="custname" type="text" class="mui-input-clear" >
+		        </div>
+		        
+		        <div class="mui-input-row  ">
+		            <label>施工单位代码</label>
+		            <input id="buildid" type="text" class="mui-input-clear" placeholder="施工单位代码">
+		        </div>
+		        <div class="mui-input-row  ">
+		            <label>施工单位</label>
+		            <input id="buildname" type="text" class="mui-input-clear" placeholder="施工单位">
+		        </div>
+
+		        <div class="mui-input-row">
+		            <label>合同编号</label>
+		            <input id="htbh" type="text" class="mui-input-clear" >
+		        </div>
+		        <div class="mui-input-row">
+		            <label>施工部位</label>
+		            <input  id="part" type="text" class="mui-input-clear" placeholder="*"">
+		        </div>
+		        <div class="mui-input-row">
+		            <label>强度等级</label>
+		            <input id="grade" type="text" class="mui-input-clear" placeholder="*">
+		        </div>
+		        <div class="mui-input-row">
+		            <label>特殊要求</label>
+		            <input id="tsname" type="text" class="mui-input-clear" >
+		        </div>
+		        <div class="mui-input-row">
+		            <label>坍 落 度</label>
+		            <input id="tld" type="text" class="mui-input-clear" placeholder="*">
+		            <input id="hiddenTldtld" type="hidden" >
+		        </div>
+		        <div class="mui-input-row">
+		            <label>订货方量</label>
+		            <input id="qualityplan" type="number"  min="0.1" max="50000" class="mui-numbox-input" placeholder="*">
+		        </div>
+
+		        <div class="mui-input-row">
+		            <label>备    注</label>
+		            <input id="remark1" type="textare" class="mui-input-clear" placeholder="备注">
+		        </div>
+		        
+		        
+		    </form>
+		    
+		    <div class="mui-content-padded">
+		    	
+		    		<div style="width:20%;float: left" class="active-but">
+						<button id='save' class="mui-btn mui-btn-block mui-btn-primary">保存</button>
+					</div>
+					<div style="width:20%;float: right" class="active-but">
+						<button id='esc' class="mui-btn mui-btn-block mui-btn-danger">取消</button>
+					</div>
+		</div>
+	</body>
+
+</html>
