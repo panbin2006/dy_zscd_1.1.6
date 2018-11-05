@@ -73,7 +73,7 @@ mui.plusReady(function() {
 	//监听get_edit事件，接收 mpplancust_list传递过来的参数
 	window.addEventListener('get_edit',function(event){
 		var dh = event.detail.dh;
-		console.log(dh);
+//		console.log(dh);
 		inp_arr['planid'].value=dh;
 		
 		mui.ajax({
@@ -272,7 +272,7 @@ mui.plusReady(function() {
 		});
 	}, false);
 
-	//3.选择工程
+	//选择工程
 	inp_arr['projectname'].addEventListener('blur', function(event) {
 //		console.log('match');
 		var str = inp_arr['projectname'].value;
@@ -304,7 +304,7 @@ mui.plusReady(function() {
 	
 	}, false);
 	
-	//8.保存
+	//保存修改
 	
 	document.getElementById('save').addEventListener('tap',function(event){
 //		console.log('save');
@@ -325,13 +325,13 @@ mui.plusReady(function() {
 		btrans 		= '';
 		qualityplan = inp_arr['qualityplan'].value;
 		remark1		=inp_arr['remark1'].value;
-//		console.log('save');
+		console.log(planid);
 		mui.ajax({
-  			url:basicUrl+'mpplancust/save', //tp5
+  			url:basicUrl+'mpplancust/update', //tp5
   			data:{
   				
-  				PlanID    	:planid,       //'B1810260002',
-				PlanName  	:planname,       //'B1810260002',
+//				PlanID    	:planid,       //'B1810260002',
+//				PlanName  	:planname,       //'B1810260002',
 				CoID      	:coid,
 				Pline     	:pline,
 				PDate     	:pdate, //'2018-10-29 21:30:00', 
@@ -344,7 +344,8 @@ mui.plusReady(function() {
 				tld			:tld,
 				Part		:part,
 				BTrans		:'',
-				QualityPlan	:qualityplan
+				QualityPlan	:qualityplan,
+				id:planid
 		  	},
   			dataType:'json',//服务器返回json格式数据
   			type:'get',//HTTP请求类型
@@ -352,7 +353,7 @@ mui.plusReady(function() {
   			success:function(data){
 //					console.log('save');
 					var obj=eval('(' + data + ')');
-//					console.log(data);
+					console.log(data);
 					mui.toast('订单保存成功！');
 					//关闭窗口，回到mpplancust_list页面
 					mui.back();

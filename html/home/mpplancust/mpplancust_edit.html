@@ -54,6 +54,8 @@ mui.plusReady(function() {
 	
 	//1.获取表单对象数组
 	var inp_arr = getElements('custform');
+	
+	var dh = null;
 
 	//文本自动补全函数
 	function auto(input,arr){ //input:文本框id,arr :传入的数组
@@ -67,11 +69,45 @@ mui.plusReady(function() {
 		});
 	}
 
-	//2.生成订单号
-	var self = plus.webview.currentWebview();//获取当前窗体对象
-	var dh   = self.dh;
-//  console.log(dh);
-	inp_arr['planid'].value = dh;
+	//2.根据订单号获取数据
+	//监听get_edit事件，接收 mpplancust_list传递过来的参数
+	window.addEventListener('get_edit',function(event){
+		var dh = event.detail.dh;
+//		console.log(dh);
+		inp_arr['planid'].value=dh;
+		
+		mui.ajax({
+			url: basicUrl + 'mpplancust/read', 
+			data: {id:dh},
+			dataType: 'json', //服务器返回json格式数据
+			type: 'get', //HTTP请求类型
+			timeout: 10000, //超时时间设置为10秒；
+			success: function(data) {
+
+				var obj = eval('(' + data + ')');
+//				console.log(data);
+//				console.log(obj.PDate.substr(0,16));
+//				console.log(LocaldatastrT(obj.PDate));
+
+				inp_arr['planid'].value      = obj.PlanID;    	
+				inp_arr['coid'].value        = obj.CoID   ;  
+				inp_arr['pdate'].value       = LocaldatastrT(obj.PDate)   ;
+				inp_arr['projectid'].value   = obj.ProjectID; 
+				inp_arr['projectname'].value = obj.ProjectName;	
+				inp_arr['custid'].value      = obj.CustID 		;
+				inp_arr['custname'].value    = obj.CustName	;
+				inp_arr['grade'].value       = obj.Grade	;
+				inp_arr['tsname'].value      = obj.TSName;
+				inp_arr['tld'].value     	 = obj.tld	;
+				inp_arr['part'].value        = obj.Part;
+				inp_arr['qualityplan'].value     = parseInt(obj.QualityPlan);
+				
+			},
+			error: function(xhr, type, errorThrown) {
+				mui.toast('网络连接失败，请联系管理员');
+			}
+		});
+	});
 	
 	//3.文本框自动补全
 	//坍落度文本框自动补全
@@ -236,7 +272,7 @@ mui.plusReady(function() {
 		});
 	}, false);
 
-	//3.选择工程
+	//选择工程
 	inp_arr['projectname'].addEventListener('blur', function(event) {
 //		console.log('match');
 		var str = inp_arr['projectname'].value;
@@ -252,7 +288,6 @@ mui.plusReady(function() {
 			success: function(data) {
 
 				var obj = eval('(' + data + ')');
-				
 				$$('#coid').val(obj[0].coid);
 				$$('#projectid').val(obj[0].projectid);
 				$$('#custid').val(obj[0].custid);
@@ -269,7 +304,7 @@ mui.plusReady(function() {
 	
 	}, false);
 	
-	//8.保存
+	//保存修改
 	
 	document.getElementById('save').addEventListener('tap',function(event){
 //		console.log('save');
@@ -290,13 +325,13 @@ mui.plusReady(function() {
 		btrans 		= '';
 		qualityplan = inp_arr['qualityplan'].value;
 		remark1		=inp_arr['remark1'].value;
-//		console.log('save');
+//		console.log(planid);
 		mui.ajax({
-  			url:basicUrl+'mpplancust/save', //tp5
+  			url:basicUrl+'mpplancust/update', //tp5
   			data:{
   				
-  				PlanID    	:planid,       //'B1810260002',
-				PlanName  	:planname,       //'B1810260002',
+//				PlanID    	:planid,       //'B1810260002',
+//				PlanName  	:planname,       //'B1810260002',
 				CoID      	:coid,
 				Pline     	:pline,
 				PDate     	:pdate, //'2018-10-29 21:30:00', 
@@ -305,12 +340,12 @@ mui.plusReady(function() {
 				CustID 		:custid,
 				CustName	:custname,
 				Grade		:grade,
-				TDIS		:tsid,
 				TSName		:tsname,
 				tld			:tld,
 				Part		:part,
 				BTrans		:'',
-				QualityPlan	:qualityplan
+				QualityPlan	:qualityplan,
+				id:planid
 		  	},
   			dataType:'json',//服务器返回json格式数据
   			type:'get',//HTTP请求类型
@@ -354,7 +389,7 @@ mui.plusReady(function() {
 		            <label>订货单号</label>
 		            <input id="planid" type="text" class="mui-input-clear"  ">
 		        </div>
-		        <div class="mui-input-row  mui-hidden">
+		        <div class="mui-input-row ">
 		            <label>分站代码</label>
 		            <input id="coid" type="text" class="mui-input-clear" ">
 		        </div>
@@ -371,16 +406,16 @@ mui.plusReady(function() {
 		            <label>工程名称</label>
 		            <input id="projectname" type="text" class="mui-input-clear"   placeholder="*">
 		        </div>
-		         <div class="mui-input-row  mui-hidden">
+		         <div class="mui-input-row mui-hidden ">
 		            <label>客户代码</label>
 		            <input id="custid" type="text" class="mui-input-clear" >
 		        </div>
-		        <div class="mui-input-row mui-hidden">
+		        <div class="mui-input-row ">
 		            <label>客户名称</label>
 		            <input id="custname" type="text" class="mui-input-clear" >
 		        </div>
 		        
-		        <div class="mui-input-row  mui-hidden">
+		        <div class="mui-input-row mui-hidden">
 		            <label>施工单位代码</label>
 		            <input id="buildid" type="text" class="mui-input-clear" placeholder="施工单位代码">
 		        </div>
@@ -389,7 +424,7 @@ mui.plusReady(function() {
 		            <input id="buildname" type="text" class="mui-input-clear" placeholder="施工单位">
 		        </div>
 
-		        <div class="mui-input-row">
+		        <div class="mui-input-row mui-hidden">
 		            <label>合同编号</label>
 		            <input id="htbh" type="text" class="mui-input-clear" >
 		        </div>

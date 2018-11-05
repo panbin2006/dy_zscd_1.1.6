@@ -38,7 +38,8 @@
 	},
 	"html/home/mpplancust/mpplancust_list.html": {
 		"refer": [
-			"html/home/mpplancust/mpplancust_create.html"
+			"html/home/mpplancust/mpplancust_create.html",
+			"html/home/mpplancust/mpplancust_edit.html"
 		],
 		"resources": []
 	},
@@ -61,7 +62,8 @@
 		],
 		"refer": [
 			"html/home/test/test_mpplancust_crate.html",
-			"html/home/test/mpplancust_edit.html"
+			"html/home/test/mpplancust_edit.html",
+			"html/home/test/test_mpplancust_create.html"
 		]
 	}
 }

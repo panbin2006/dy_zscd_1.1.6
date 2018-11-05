@@ -176,7 +176,7 @@ mui.plusReady(function() {
 	inp_arr['part'].addEventListener('keyup', function(event) {
 //		console.log('part');
 		var str = inp_arr['part'].value;
-		console.log(str);
+//		console.log(str);
 		mui.ajax({
 			url: basicUrl + 'Bbpart/index', //tp5
 			data: {
@@ -296,7 +296,7 @@ mui.plusReady(function() {
 		classname5  = inp_arr['classname5'].value;
 		createtime  = new Date().format("yyyy-MM-dd hh:mm:ss");
 		noteman     = 'admin';
-		console.log(createtime);
+//		console.log(createtime);
 		mui.ajax({
   			url:basicUrl+'mpplancust/save', //tp5
   			data:{
@@ -398,7 +398,7 @@ mui.plusReady(function() {
 		            <input id="buildname" type="text" class="mui-input-clear" placeholder="施工单位">
 		        </div>
 
-		        <div class="mui-input-row">
+		        <div class="mui-input-row mui-hidden">
 		            <label>合同编号</label>
 		            <input id="htbh" type="text" class="mui-input-clear" >
 		        </div>
@@ -428,20 +428,20 @@ mui.plusReady(function() {
 		            <label>备    注</label>
 		            <input id="remark1" type="textare" class="mui-input-clear" placeholder="备注">
 		        </div>
-		        <div class="mui-input-row  ">
+		        <div class="mui-input-row  mui-hidden">
 		            <label>业务员编号</label>
 		            <input id="classid1" type="text" class="mui-input-clear" ">
 		        </div>
-		         <div class="mui-input-row  ">
+		         <div class="mui-input-row  mui-hidden">
 		            <label>业务员</label>
 		            <input id="classname1" type="text" class="mui-input-clear" ">
 		        </div>
 		        
-		         <div class="mui-input-row  ">
+		         <div class="mui-input-row  mui-hidden">
 		            <label>结款类型</label>
 		            <input id="classname5" type="text" class="mui-input-clear" ">
 		        </div>
-		         <div class="mui-input-row  ">
+		         <div class="mui-input-row  mui-hidden">
 		            <label>录入人</label>
 		            <input id="noteman" type="text" class="mui-input-clear" ">
 		        </div>

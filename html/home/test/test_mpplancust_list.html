@@ -60,6 +60,7 @@
 			     location.reload();//父页面仅仅是刷新页面，当然也可以自定义逻辑函数写在里面 
 			})
 			
+
 			
 			var pdate = myData(Date());
 			
@@ -125,14 +126,6 @@
 					id:'mpplancust_edit.html'
 				});
 				
-				//预加载订单新增窗口
-				var  mpplancust_create =null;
-				mpplancust_create=mui.preload({
-					url:'test_mpplancust_create.html',
-					id:'mpplancust_create'
-				});
-				
-				
 				
 				document.getElementById('mpplancust_create').addEventListener('tap',function(){
 	      			if(qx[1].PAdd=='1'){
@@ -186,9 +179,9 @@
 				    var id = this.getAttribute("id");
 				    mui.confirm('删除订单： '+id+' ，确认吗？', '删除订单', ['取消','确定'], function(e) {
 						if (e.index == 1) {
-							console.log('1');
+//							console.log('1');
 							mui.ajax({
-					  			url:basicUrl+'mpplancust/save', //tp5
+					  			url:basicUrl+'mpplancust/delete', //tp5
 					  			data:{
 					  				id:id
 							  	},
@@ -197,9 +190,9 @@
 					  			timeout:10000,//超时时间设置为10秒；
 					  			success:function(data){
 										var obj=eval('(' + data + ')');
-										mui.toast('订单保存成功！');
-										//关闭窗口，回到mpplancust_list页面
-										mui.back();
+										mui.toast('订单删除成功！');
+										//刷新list
+										location.reload();
 					  			},
 					  			error:function(xhr,type,errorThrown){
 					  				mui.toast('网络连接失败，请联系管理员');

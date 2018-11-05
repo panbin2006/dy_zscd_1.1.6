@@ -6,6 +6,7 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/iconfont.css"/>
 		<style>
 			.mui-bar-nav{
 				height: 50px;
@@ -23,10 +24,15 @@
 			<a class="mui-icon mui-icon-plusempty mui-pull-right" id = "mpplancust_create"></a>
 		</header>
 		<div class="mui-content">
+			<div id="popover" class="mui-popover">
+				  <ul class="mui-table-view">
+				  	<li id='ins' class="mui-table-view-cell active"><a href="#">导入</a></li>
+				    <li id='edit' class="mui-table-view-cell active"><a href="#">修改</a></li>
+				    <li id='del' class="mui-table-view-cell active"><a href="#">删除</a></li>
+				  </ul>
+			</div>
 			<ul id='list' class="mui-table-view">
-				<li class="mui-table-view-cell">
-					
-				</li>
+				<!--js填充列表-->
 			</ul>
 			
 		</div>
@@ -38,11 +44,23 @@
 		<script src="../../../js/webviewGroup.js"></script>
 		<script src="../../../js/common.js"></script>
 		<script type="text/javascript">
-			mui.init();
+			mui.init({
+				gestureConfig:{
+				   tap: true, //默认为true
+				   doubletap: true, //默认为false
+				   longtap: true, //默认为false
+				   swipe: true, //默认为true
+				   drag: true, //默认为true
+				   hold:false,//默认为false，不监听
+				   release:false//默认为false，不监听
+				}
+			});
+			
 			//监听refresh事件，从mpplancust_create返回后，刷新本页列表
 			window.addEventListener('refresh',function(){
 			     location.reload();//父页面仅仅是刷新页面，当然也可以自定义逻辑函数写在里面 
 			})
+			
 			
 			
 			var pdate = myData(Date());
@@ -59,24 +77,30 @@
 						var str = '';
 						for(var i = 0; i < obj.length; i++) {
 //							console.log( obj[i].ProjectName);
-							str += '<li class="mui-table-view-cell mui-collapse">';
-								str += '<a id="mpplanD" class="mui-navigate-rigth" href="#">';
-									//计划单一级列表左
-									str += '<div style="width:70%;float: left">';
-										str += '<p class="main" >' + obj[i].PlanID + '</p>';
-										str += '<p  class="mui-ellipsis main">' + obj[i].ProjectName + '</p>';
-										str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">施工部位：'+obj[i].Part+'</p>';
-									    str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">计划开盘：'+obj[i].PDate.substr(0,16)+'</p>';
-									str += '</div>';
-			
-									//计划单一级列表右
-									str += '<div style="width:30%;float: right">';
-		//															str+='<p style="font-style: inherit; font-size: 15px;">'+state+'</p>';
-										str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">坍落度：'+obj[i].tld+'</p>';
-										str += '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">强度：'+obj[i].Grade+obj[i].TSName+'</p>';
-										str += '<p  class="mui-ellipsis datil">订货量：' + Number(obj[i].QualityPlan) + '</p>';
-									str += '</div>';
-								str += '</a>';
+							str += '<li id="'+ obj[i].PlanID +'" class="mui-table-view-cell mui-collapse">';
+									//左滑菜单按钮
+								str+='<div id="btn_items" class="mui-slider-right mui-disabled">';
+					    			str+='<a id="'+ obj[i].PlanID  +'"   class="mui-btn mui-btn-yellow mui-icon mui-icon-compose edit"></a>';
+									str+='<a id="'+ obj[i].PlanID  +'"   class="mui-btn mui-btn-red mui-icon mui-icon-trash del"></a>';
+					    		str+='</div>';
+					    		
+					    		
+					    		str+='<div class="mui-slider-handle">';		
+										//计划单一级列表左
+										str += '<div style="width:70%;float: left">';
+											str += '<p class="main" >' + obj[i].PlanID + '</p>';
+											str += '<p  class="mui-ellipsis main">' + obj[i].ProjectName + '</p>';
+											str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">施工部位：'+obj[i].Part+'</p>';
+										    str+='<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">计划开盘：'+obj[i].PDate.substr(0,16)+'</p>';
+										str += '</div>';
+				
+										//计划单一级列表右
+										str += '<div style="width:30%;float: right">';
+											str+= '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">坍落度：'+obj[i].tld+'</p>';
+											str += '<p style="font-style: inherit; font-size: 12px;" class="mui-ellipsis">强度：'+obj[i].Grade+obj[i].TSName+'</p>';
+											str += '<p  class="mui-ellipsis datil">订货量：' + Number(obj[i].QualityPlan) + '</p>';
+										str += '</div>';
+									str+='</div>';
 							str += '</li>';
 						};
 						
@@ -95,7 +119,18 @@
 				refresh();
 				//新增订单
 				qxcx(); //读取权限
-				document.getElementById('mpplancust_create').addEventListener('tap',function(){
+				
+				//预加载订单修改窗口
+				var  mpplancust_edit =null;
+				mpplancust_edit=mui.preload({
+					url:'mpplancust_edit.html',
+					id:'mpplancust_edit.html'
+				});
+
+				
+				
+			    //新增订货单
+					document.getElementById('mpplancust_create').addEventListener('tap',function(){
 	      			if(qx[1].PAdd=='1'){
 	      				//生成订货单编号
 	      				var pdate = getNowFormatDate();
@@ -127,7 +162,53 @@
 	      				mui.toast("您没有此操作权限，请联系管理员！");
 	      			}
 	      		});
+	      		
+	      		
+	      		//修改订单
+	      		mui("#list").on('tap','.edit',function(){
+				    //获取id
+				    var dh = this.getAttribute("id");
+//				    console.log('edit'+dh);
+				    //传值修改页面，通知加载新数据
+				    mui.fire(mpplancust_edit,'get_edit',{dh:dh});
+//					打开
+					mpplancust_edit.show();
+				}) 
+				
+				
+				//删除订单
+				mui("#list").on('tap','.del',function(){
+					//获取id
+				    var id = this.getAttribute("id");
+				    mui.confirm('删除订单： '+id+' ，确认吗？', '删除订单', ['取消','确定'], function(e) {
+						if (e.index == 1) {
+//							console.log('1');
+							mui.ajax({
+					  			url:basicUrl+'mpplancust/delete', //tp5
+					  			data:{
+					  				id:id
+							  	},
+					  			dataType:'json',//服务器返回json格式数据
+					  			type:'get',//HTTP请求类型
+					  			timeout:10000,//超时时间设置为10秒；
+					  			success:function(data){
+										var obj=eval('(' + data + ')');
+										mui.toast('订单删除成功！');
+										//刷新list
+										location.reload();
+					  			},
+					  			error:function(xhr,type,errorThrown){
+					  				mui.toast('网络连接失败，请联系管理员');
+					  			}
+					  		});
+						}else{
+							console.log('000');
+						}
+					});
+				});
 			});
+			
+			
 		</script>
 	</body>
 

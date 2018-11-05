@@ -171,7 +171,8 @@
 			"html/home/mpplancust/mpplancust_list.html": {
 				"resources": [],
 				"refer": [
-					"html/home/mpplancust/mpplancust_create.html"
+					"html/home/mpplancust/mpplancust_create.html",
+					"html/home/mpplancust/mpplancust_edit.html"
 				],
 				"priority": 0
 			},
@@ -195,7 +196,8 @@
 					"html/home/test/test_mpplancust_crate.html"
 				],
 				"refer": [
-					"html/home/test/mpplancust_edit.html"
+					"html/home/test/mpplancust_edit.html",
+					"html/home/test/test_mpplancust_create.html"
 				],
 				"priority": 0
 			}
